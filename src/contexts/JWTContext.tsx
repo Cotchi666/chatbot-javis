@@ -116,7 +116,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-  
     const body = {
       query: `
     mutation ($loginAuthInput: CreateLoginAuthInput!)  {
