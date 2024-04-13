@@ -4,6 +4,8 @@ import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 // @types
 import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
+import { compareDesc } from 'date-fns/esm';
+import { string } from 'yup';
 
 // ----------------------------------------------------------------------
 
@@ -192,21 +194,48 @@ function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
   };
-  const loginGitHub = async (data: string) => {
-    // const response = await axios.post('/api/account/login', {
-    //   email,
-    //   password
-    // });
-    // const { accessToken, user } = response.data;
+  const loginGitHub = async (code: string) => {
+    console.log('🚀 ~ loginGitHub ~ data:', code);
 
-    // setSession(accessToken);
-    await initializeGithubLogin();
-    dispatch({
-      type: Types.Login,
-      payload: {
-        user: {}
+    const body = {
+      query: `query ($code: String!) {
+        githubLogin(gitHubCode: { codeAuth: $code }) {
+           user {
+          username
+          email
+          phoneNumber
+          address
+          role
+          gender
+          dateOfBirth
+          avatar
+          provider
+        }
+        }
+      }`,
+      variables: {
+        code: code
       }
-    });
+  }
+  let options = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}   
+    const domainBackend = process.env.REACT_APP_BACKEND_HOST ? process.env.REACT_APP_BACKEND_HOST : " " ;
+    const response = await axios.post( domainBackend, body,options);
+
+    console.log('🚀 ~ accessToken:', response);
+    const { accessToken } = response.data;
+    console.log('accessToken:', accessToken);
+
+    // await initializeGithubLogin();
+    // dispatch({
+    //   type: Types.Login,
+    //   payload: {
+    //     user: {}
+    //   }
+    // });
   };
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
     const response = await axios.post('/api/account/register', {
