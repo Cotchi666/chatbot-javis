@@ -116,17 +116,41 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await axios.post('/api/account/login', {
-      email,
-      password
-    });
-    const { accessToken, user } = response.data;
+  
+    const body = {
+      query: `
+    mutation ($loginAuthInput: CreateLoginAuthInput!)  {
+      login(loginAuthInput: $loginAuthInput) {
+        accessToken
+        refreshToken
+      }
+    }
+  `,
+      variables: {
+        loginAuthInput: {
+          username: email,
+          password: password
+        }
+      }
+    };
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    const url = 'http://localhost:8000/graphql'; // Replace with your GraphQL endpoint URL
+
+    const response = await axios.post(url, body, options);
+    console.log(response.data);
+
+    const { accessToken } = response.data;
 
     setSession(accessToken);
     dispatch({
       type: Types.Login,
       payload: {
-        user
+        user: {}
       }
     });
   };
