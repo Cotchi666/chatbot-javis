@@ -4,8 +4,6 @@ import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 // @types
 import { ActionMap, AuthState, AuthUser, JWTContextType } from '../@types/authentication';
-import { compareDesc } from 'date-fns/esm';
-import { string } from 'yup';
 
 // ----------------------------------------------------------------------
 
@@ -195,47 +193,39 @@ function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
   const loginGitHub = async (code: string) => {
-    console.log('🚀 ~ loginGitHub ~ data:', code);
+    await initializeGithubLogin();
 
     const body = {
       query: `query ($code: String!) {
-        githubLogin(gitHubCode: { codeAuth: $code }) {
-           user {
-          username
-          email
-          phoneNumber
-          address
-          role
-          gender
-          dateOfBirth
-          avatar
-          provider
-        }
-        }
-      }`,
+      githubLogin(gitHubCode: { codeAuth: $code }) {
+        accessToken,
+        refreshToken
+      }
+    }`,
       variables: {
         code: code
       }
-  }
-  let options = {
-    headers: {
+    };
+    let options = {
+      headers: {
         'Content-Type': 'application/json'
-    }
-}   
-    const domainBackend = process.env.REACT_APP_BACKEND_HOST ? process.env.REACT_APP_BACKEND_HOST : " " ;
-    const response = await axios.post( domainBackend, body,options);
+      }
+    };
+    const domainBackend = process.env.REACT_APP_BACKEND_HOST
+      ? process.env.REACT_APP_BACKEND_HOST
+      : ' ';
+    const response = await axios.post(domainBackend, body, options);
 
     console.log('🚀 ~ accessToken:', response);
     const { accessToken } = response.data;
     console.log('accessToken:', accessToken);
 
-    // await initializeGithubLogin();
-    // dispatch({
-    //   type: Types.Login,
-    //   payload: {
-    //     user: {}
-    //   }
-    // });
+    dispatch({
+      type: Types.Login,
+      payload: {
+        user: {}
+      }
+    });
   };
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
     const response = await axios.post('/api/account/register', {
