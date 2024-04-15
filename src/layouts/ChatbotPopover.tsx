@@ -3,45 +3,43 @@ import { Icon } from '@iconify/react';
 import closeFill from '@iconify/icons-eva/close-fill';
 import options2Fill from '@iconify/icons-eva/options-2-fill';
 // material
-import { Button, Box, Backdrop, Paper, Tooltip, Divider, Typography, Stack } from '@mui/material';
+import { Button, Box, Backdrop, Paper, Tooltip, Divider, Typography, Stack, IconButton } from '@mui/material';
 //
+import Popover from '@mui/material/Popover';
+import TextField from '@mui/material/TextField';
+
 import Fab from '@mui/material/Fab';
-
+import ClearIcon from '@mui/icons-material/Clear';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-
+import React from 'react';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
+import SendIcon from '@mui/icons-material/Send';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 260;
 
 export default function Chatbot() {
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [open]);
-
-  const handleToggle = () => {
-    setOpen((prev) => !prev);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(event.currentTarget)
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setAnchorEl(null);
   };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <>
-      <Backdrop
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}
-        onClick={handleClose}
-      />
 
       <Box
         sx={{
+        
           top: 12,
           bottom: 12,
           right: 0,
@@ -52,6 +50,7 @@ export default function Chatbot() {
       >
         <Box
           sx={{
+          
             p: 0.5,
             px: '4px',
             mt: -3,
@@ -62,12 +61,83 @@ export default function Chatbot() {
             borderRadius: '24px 0 16px 24px',
           }}
         >
-         <Fab color="primary" aria-label="add">
+        <Fab color="primary" aria-describedby={id} onClick={handleClick}>
         <SmartToyOutlinedIcon />
-      </Fab>
-        </Box>
+        </Fab>
 
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          >
+            {/*  */}
+          <Stack  direction="row" justifyContent="space-between">
+            <Typography  sx={{ width:'500px',
+                
+                p:3,
+              }}  variant="h6">Chat with Us</Typography>
+            <IconButton aria-label="fingerprint" onClick={handleClose}sx={{height:'40px', alignItems:"flex-start"}}> 
+              <RemoveOutlinedIcon />
+            </IconButton>
+
+          </Stack>
+           <Divider  />
+          {/*  */}
+          <Stack 
+            sx={{ width:'auto',
+                height:'450px',
+                top: 12,
+                bottom: 12,
+                right: 0,
+                p:3,
+              }} 
+            direction="column" justifyContent="space-between" alignItems="start">
+            <Typography sx={{ width:'auto',
+                height:'auto',
+                // top: 12,
+                // bottom: 12,
+                // right: 0,
+                // p:3,
+              }} >
+              Hello content here
+            </Typography>
+            <Typography>
+              Hello content here
+            </Typography>
+            <Typography>
+              Hello content here
+            </Typography>
+             <Typography>
+              Hello content here
+            </Typography>
+          </Stack>
+          {/*  */}
+         
+          <TextField
+            fullWidth
+            placeholder="Type your message..."
+            variant="outlined"
+            InputProps={{
+              endAdornment: (
+                <IconButton color="primary">
+                  <SendIcon />
+                </IconButton>
+              ),
+            }}
+            sx={{ p: 0.5 }}
+          />
        
+          </Popover>
+        </Box>
       </Box>
     </>
   );
