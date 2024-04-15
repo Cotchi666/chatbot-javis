@@ -15,16 +15,23 @@ import React from 'react';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import SendIcon from '@mui/icons-material/Send';
+import { useTheme } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 260;
 
 export default function Chatbot() {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const theme = useTheme();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     console.log(event.currentTarget)
-    setAnchorEl(event.currentTarget);
+    if (anchorEl == null){
+      setAnchorEl(event.currentTarget);
+
+    }else{
+      setAnchorEl(null);
+    }
   };
 
   const handleClose = () => {
@@ -80,17 +87,14 @@ export default function Chatbot() {
           }}
           >
             {/*  */}
-          <Stack  direction="row" justifyContent="space-between">
-            <Typography  sx={{ width:'500px',
-                
-                p:3,
-              }}  variant="h6">Chat with Us</Typography>
+          <Stack  direction="row" justifyContent="space-between" sx={{backgroundColor: theme.palette.primary.main}}>
+            <Typography  sx={{ width:'500px',  p:"9px", height:'33px' }} variant="h6" ><SmartToyOutlinedIcon /></Typography>
             <IconButton aria-label="fingerprint" onClick={handleClose}sx={{height:'40px', alignItems:"flex-start"}}> 
               <RemoveOutlinedIcon />
             </IconButton>
 
           </Stack>
-           <Divider  />
+           {/* <Divider  /> */}
           {/*  */}
           <Stack 
             sx={{ width:'auto',
