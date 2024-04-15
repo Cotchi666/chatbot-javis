@@ -89,7 +89,17 @@ export default function Router() {
         }
       ]
     },
-
+    {
+      path: 'chatbot',
+      element: (
+          <DashboardLayout />
+      ),
+      children: [
+        { element: <Navigate to="/chatbot/one" replace /> },
+        { path: 'one', element: <Chatbot /> },
+        
+      ]
+    },
     // Main Routes
     {
       path: '*',
@@ -117,6 +127,7 @@ const Register = Loadable(lazy(() => import('../pages/authentication/Register'))
 // const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
+const Chatbot = Loadable(lazy(() => import('../pages/chatbot/Chatbot')));
 const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
 const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
 const PageFour = Loadable(lazy(() => import('../pages/PageFour')));

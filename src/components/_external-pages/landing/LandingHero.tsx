@@ -1,6 +1,9 @@
 import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 import flashFill from '@iconify/icons-eva/flash-fill';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
@@ -116,6 +119,10 @@ export default function LandingHero() {
               </Link>
             </Stack>
 
+            <Stack   
+              direction="row"
+              spacing={1.5}
+              justifyContent={{ xs: 'center', md: 'flex-start' }}>
             <motion.div variants={varFadeInRight}>
               <Button
                 size="large"
@@ -124,10 +131,21 @@ export default function LandingHero() {
                 to={PATH_DASHBOARD.root}
                 startIcon={<Icon icon={flashFill} width={20} height={20} />}
               >
-                Live Preview
+                Dashboard 
               </Button>
             </motion.div>
-
+            <motion.div variants={varFadeInRight}>
+              <Button
+                size="large"
+                variant="contained"
+                component={RouterLink}
+                to={"/chatbot"}
+                startIcon={<SmartToyOutlinedIcon/>}
+              >
+                Chat w/ bot
+              </Button>
+            </motion.div>
+            </Stack>
             <Stack
               direction="row"
               spacing={1.5}
