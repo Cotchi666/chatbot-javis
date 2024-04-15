@@ -192,15 +192,34 @@ function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
   };
-  const loginGitHub = async (data: string) => {
-    // const response = await axios.post('/api/account/login', {
-    //   email,
-    //   password
-    // });
-    // const { accessToken, user } = response.data;
-
-    // setSession(accessToken);
+  const loginGitHub = async (code: string) => {
     await initializeGithubLogin();
+
+    const body = {
+      query: `query ($code: String!) {
+      githubLogin(gitHubCode: { codeAuth: $code }) {
+        accessToken,
+        refreshToken
+      }
+    }`,
+      variables: {
+        code: code
+      }
+    };
+    let options = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    const domainBackend = process.env.REACT_APP_BACKEND_HOST
+      ? process.env.REACT_APP_BACKEND_HOST
+      : ' ';
+    const response = await axios.post(domainBackend, body, options);
+
+    console.log('🚀 ~ accessToken:', response);
+    const { accessToken } = response.data;
+    console.log('accessToken:', accessToken);
+
     dispatch({
       type: Types.Login,
       payload: {
