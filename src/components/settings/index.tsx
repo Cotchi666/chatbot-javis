@@ -108,7 +108,7 @@ export default function Settings() {
           </Stack>
           <Divider />
 
-          <Scrollbar sx={{ height: 1 }}>
+          <Scrollbar  sx={{ height: 1 }}>
             <Stack spacing={4} sx={{ pt: 3, px: 3, pb: 15 }}>
               <Stack spacing={1.5}>
                 <Typography variant="subtitle2">Mode</Typography>

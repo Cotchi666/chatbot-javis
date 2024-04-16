@@ -17,6 +17,7 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material/styles';
+import Scrollbar from 'components/Scrollbar';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 260;
@@ -97,90 +98,99 @@ export default function Chatbot() {
             </Stack>
             {/* <Divider  /> */}
             {/*  */}
-            <Stack
+            <Scrollbar
               sx={{
-                width: '450px',
-                height: '450px',
-                top: 12,
-                bottom: 12,
-                right: 0,
-                p: 3,
-                pt: 0.5
+                '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
+                  height: 0
+                },
               }}
-
-              direction="column" justifyContent="space-between" alignItems="start" display="flow">
+            >
               <Stack
-                display="-webkit-inline-box"
                 sx={{
-                  pt: '35px',
-                  width: '480px',
-                  height: 'auto',
+                  width: '450px',
+                  height: '450px',
+                  top: 12,
+                  bottom: 12,
+                  right: 0,
+                  p: 3,
+                  pt: 0.5
+                }}
 
-                }} >
+                direction="column" justifyContent="space-between" alignItems="start" display="flow">
+                <Stack
+                  display="-webkit-inline-box"
+                  sx={{
+                    pt: '35px',
+                    width: '480px',
+                    height: 'auto',
 
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
-                  Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
-                </Typography>
+                  }} >
+
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
+                    Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                  </Typography>
+
+                </Stack>
+                {/* user chat */}
+                <Stack
+                  display="-webkit-inline-box"
+                  sx={{
+                    pt: '35px',
+                    width: '480px',
+                    height: 'auto',
+                    pl: '126px'
+                  }} >
+                  <Typography>
+                    <Typography sx={{
+                      backgroundColor: theme.palette.primary.main,
+                      p: "12px 27px",
+                      borderRadius: "13px"
+                    }}
+                    >
+                      Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                    </Typography>
+                  </Typography>
+
+
+                </Stack>
+
+                <Stack
+                  display="-webkit-inline-box"
+                  sx={{
+                    pt: '35px',
+                    width: '480px',
+                    height: 'auto',
+
+                  }} >
+
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
+                    Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                  </Typography>
+
+                </Stack>
 
               </Stack>
+            </Scrollbar>
 
-              <Stack
-                display="-webkit-inline-box"
-                sx={{
-                  pt: '35px',
-                  width: '480px',
-                  height: 'auto',
-                  pl: '126px'
-                }} >
-                <Typography>
-                  <Typography sx={{
-                    backgroundColor: theme.palette.primary.main,
-                    p: "6px",
-                    borderRadius: "13px"
-                     }}
-                  >
-                  Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
-                </Typography>
-              </Typography>
+            {/*  */}
 
+            <TextField
+              fullWidth
+              placeholder="Type your message..."
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <IconButton color="primary">
+                    <SendIcon />
+                  </IconButton>
+                ),
+              }}
+              sx={{ p: 0.5 }}
+            />
 
-            </Stack>
-
-            <Stack
-              display="-webkit-inline-box"
-              sx={{
-                pt: '35px',
-                width: '480px',
-                height: 'auto',
-
-              }} >
-
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
-                Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
-              </Typography>
-
-            </Stack>
-
-          </Stack>
-          {/*  */}
-
-          <TextField
-            fullWidth
-            placeholder="Type your message..."
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <IconButton color="primary">
-                  <SendIcon />
-                </IconButton>
-              ),
-            }}
-            sx={{ p: 0.5 }}
-          />
-
-        </Popover>
-      </Box>
-    </Box >
+          </Popover>
+        </Box>
+      </Box >
     </>
   );
 }
