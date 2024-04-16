@@ -10,6 +10,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { ProgressBarStyle } from './components/LoadingScreen';
 import ThemePrimaryColor from './components/ThemePrimaryColor';
 import NotistackProvider from './components/NotistackProvider';
+import ChatbotPopover from 'layouts/ChatbotPopover';
 
 // ----------------------------------------------------------------------
 
@@ -20,9 +21,12 @@ export default function App() {
         <RtlLayout>
           <NotistackProvider>
             <GlobalStyles />
+            <ChatbotPopover />
+
             <ProgressBarStyle />
             <Settings />
             <ScrollToTop />
+
             <Router />
           </NotistackProvider>
         </RtlLayout>
