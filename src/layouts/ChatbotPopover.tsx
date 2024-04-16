@@ -1,36 +1,58 @@
-import { useState, useEffect } from 'react';
-import { Icon } from '@iconify/react';
-import closeFill from '@iconify/icons-eva/close-fill';
-import options2Fill from '@iconify/icons-eva/options-2-fill';
+import React, { useState, useEffect } from 'react';
 // material
-import {
-  Button,
-  Box,
-  Backdrop,
-  Paper,
-  Tooltip,
-  Divider,
-  Typography,
-  Stack,
-  IconButton
-} from '@mui/material';
-//
-import Popover from '@mui/material/Popover';
-import TextField from '@mui/material/TextField';
-import Avatar from '@mui/material/Avatar';
-
-import Fab from '@mui/material/Fab';
-import ClearIcon from '@mui/icons-material/Clear';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import React from 'react';
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material/styles';
+import { Popover, TextField, Avatar, Box, Fab, Typography, Stack, IconButton } from '@mui/material';
+//
 import Scrollbar from 'components/Scrollbar';
-// ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 260;
+// ----------------------------------------------------------------------
+const chatData = [
+  ,
+  {
+    id:1,
+    isBot: true,
+    avatarUrl: '/static/images/avatar/1.jpg',
+    message:
+      'Hello content here Hello content hereHello content hereHello content hereHello  content hereHello content hereHello content hereHello content hereHello content  hereHello content hereHello content hereHello content hereHello content here '
+  },
+  {
+    id:2,
+    isBot: false,
+    avatarUrl: '/static/images/avatar/1.jpg',
+    message:
+      'Hello iam a human '
+  },
+  {id:3,
+    isBot: true,
+    avatarUrl: '/static/images/avatar/1.jpg',
+    message:
+      'Hello content here Hello content hereHello content hereHello content hereHello  content hereHello content hereHello content hereHello content hereHello content  hereHello content hereHello content hereHello content hereHello content here '
+  },
+  ,
+  {
+    id:4,
+    isBot: false,
+    avatarUrl: '/static/images/avatar/1.jpg',
+    message:
+      'Hello iam a human '
+  },
+  {id:5,
+    isBot: true,
+    avatarUrl: '/static/images/avatar/1.jpg',
+    message:
+      'Hello content here Hello content hereHello content hereHello content hereHello  content hereHello content hereHello content hereHello content hereHello content  hereHello content hereHello content hereHello content hereHello content here '
+  }
+  ,
+  {id:5,
+    isBot: true,
+    avatarUrl: '/static/images/avatar/1.jpg',
+    message:
+      'Hello content here Hello content hereHello content hereHello content hereHello  content hereHello content hereHello content hereHello content hereHello content  hereHello content hereHello content hereHello content hereHello content here '
+  }
+];
 
 export default function Chatbot() {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -52,6 +74,7 @@ export default function Chatbot() {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  useEffect(() => {});
   return (
     <>
       <Box
@@ -61,10 +84,13 @@ export default function Chatbot() {
           right: 0,
           position: 'fixed',
           zIndex: 2001,
-          ...(open && { right: 12 })
+          ...(open && { right: 12 }),
+         
         }}
       >
         <Box
+               
+
           sx={{
             p: 0.5,
             px: '4px',
@@ -112,16 +138,19 @@ export default function Chatbot() {
               </IconButton>
             </Stack>
             {/* <Divider  /> */}
-            {/*  */}
+            {/* --------------------- Message ------------------------- */}
             <Scrollbar
               sx={{
+                height:'500px',
                 '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
                   height: 0
                 }
               }}
             >
               <Stack
+                
                 sx={{
+                  
                   width: '450px',
                   height: '450px',
                   top: 12,
@@ -135,75 +164,13 @@ export default function Chatbot() {
                 alignItems="start"
                 display="flow"
               >
-                <Stack
-                  display="-webkit-inline-box"
-                  sx={{
-                    pt: '35px',
-                    width: '480px',
-                    height: 'auto'
-                  }}
-                >
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
-                    sx={{ mr: '9px', ml: '-10px' }}
-                  />{' '}
-                  <Typography>
-                    Hello content here Hello content hereHello content hereHello content hereHello
-                    content hereHello content hereHello content hereHello content hereHello content
-                    hereHello content hereHello content hereHello content hereHello content here
-                  </Typography>
-                </Stack>
-                {/* user chat */}
-                <Stack
-                  display="-webkit-inline-box"
-                  sx={{
-                    pt: '35px',
-                    width: '480px',
-                    height: 'auto',
-                    pl: '126px'
-                  }}
-                >
-                  <Typography>
-                    <Typography
-                      sx={{
-                        backgroundColor: theme.palette.primary.main,
-                        p: '12px 27px',
-                        borderRadius: '13px'
-                      }}
-                    >
-                      Hello content here Hello content hereHello content hereHello content hereHello
-                      content hereHello content hereHello content hereHello content hereHello
-                      content hereHello content hereHello content hereHello content hereHello
-                      content here
-                    </Typography>
-                  </Typography>
-                </Stack>
-
-                <Stack
-                  display="-webkit-inline-box"
-                  sx={{
-                    pt: '35px',
-                    width: '480px',
-                    height: 'auto'
-                  }}
-                >
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
-                    sx={{ mr: '9px', ml: '-10px' }}
-                  />{' '}
-                  <Typography>
-                    Hello content here Hello content hereHello content hereHello content hereHello
-                    content hereHello content hereHello content hereHello content hereHello content
-                    hereHello content hereHello content hereHello content hereHello content here
-                  </Typography>
-                </Stack>
+               {chatData.map((message, id) => (
+                  <ChatMessage key={id} message={message} />
+                ))}
               </Stack>
             </Scrollbar>
 
-            {/*  */}
-
+              {/* --------------------- Input ------------------------- */}
             <TextField
               fullWidth
               placeholder="Type your message..."
@@ -222,4 +189,42 @@ export default function Chatbot() {
       </Box>
     </>
   );
+}
+
+function ChatMessage({ message }) {
+  const { isBot, avatarUrl, message: content , id} = message;
+
+  return (  message &&  (
+    <Stack
+    
+      display="-webkit-inline-box"
+      sx={{
+        pt: '35px',
+        width: isBot ? '480px': '497px',
+        height: 'auto',
+        pl: isBot ? '0px' : '105px' ,
+        alignItems: isBot ? 'start' : 'end',
+        display: isBot ? '-webkit-inline-box' : 'flex',
+        
+      }}
+    >
+      {isBot && (
+        <Avatar alt="Bot" src={avatarUrl} sx={{ mr: '9px', ml: '-10px' }} />
+      )}
+      <Typography>
+        <Typography
+          sx={{
+           
+            backgroundColor: isBot ? 'transparent' : 'primary.main', 
+            p: isBot ? '0px 0px' : '12px 27px',
+            borderRadius: isBot ? ' ' :'13px'
+          }}
+        >
+          {content}
+        </Typography>
+      </Typography>
+    </Stack>
+  ))
+  
+  
 }
