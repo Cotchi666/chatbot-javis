@@ -7,6 +7,7 @@ import { Button, Box, Backdrop, Paper, Tooltip, Divider, Typography, Stack, Icon
 //
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
+import Avatar from '@mui/material/Avatar';
 
 import Fab from '@mui/material/Fab';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -26,10 +27,10 @@ export default function Chatbot() {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     console.log(event.currentTarget)
-    if (anchorEl == null){
+    if (anchorEl == null) {
       setAnchorEl(event.currentTarget);
 
-    }else{
+    } else {
       setAnchorEl(null);
     }
   };
@@ -46,7 +47,7 @@ export default function Chatbot() {
 
       <Box
         sx={{
-        
+
           top: 12,
           bottom: 12,
           right: 0,
@@ -57,7 +58,7 @@ export default function Chatbot() {
       >
         <Box
           sx={{
-          
+
             p: 0.5,
             px: '4px',
             mt: -3,
@@ -68,64 +69,101 @@ export default function Chatbot() {
             borderRadius: '24px 0 16px 24px',
           }}
         >
-        <Fab color="primary" aria-describedby={id} onClick={handleClick}>
-        <SmartToyOutlinedIcon />
-        </Fab>
+          <Fab color="primary" aria-describedby={id} onClick={handleClick}>
+            <SmartToyOutlinedIcon />
+          </Fab>
 
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
           >
             {/*  */}
-          <Stack  direction="row" justifyContent="space-between" sx={{backgroundColor: theme.palette.primary.main}}>
-            <Typography  sx={{ width:'500px',  p:"9px", height:'33px' }} variant="h6" ><SmartToyOutlinedIcon /></Typography>
-            <IconButton aria-label="fingerprint" onClick={handleClose}sx={{height:'40px', alignItems:"flex-start"}}> 
-              <RemoveOutlinedIcon />
-            </IconButton>
+            <Stack direction="row" justifyContent="space-between" sx={{ backgroundColor: theme.palette.primary.main }}>
+              <Typography sx={{ width: '500px', p: "9px", height: '33px' }} variant="h6" ><SmartToyOutlinedIcon /></Typography>
+              <IconButton aria-label="fingerprint" onClick={handleClose} sx={{ height: '40px', alignItems: "flex-start" }}>
+                <RemoveOutlinedIcon />
+              </IconButton>
 
-          </Stack>
-           {/* <Divider  /> */}
-          {/*  */}
-          <Stack 
-            sx={{ width:'auto',
-                height:'450px',
+            </Stack>
+            {/* <Divider  /> */}
+            {/*  */}
+            <Stack
+              sx={{
+                width: '450px',
+                height: '450px',
                 top: 12,
                 bottom: 12,
                 right: 0,
-                p:3,
-              }} 
-            direction="column" justifyContent="space-between" alignItems="start">
-            <Typography sx={{ width:'auto',
-                height:'auto',
-                // top: 12,
-                // bottom: 12,
-                // right: 0,
-                // p:3,
+                p: 3,
+                pt: 0.5
+              }}
+
+              direction="column" justifyContent="space-between" alignItems="start" display="flow">
+              <Stack
+                display="-webkit-inline-box"
+                sx={{
+                  pt: '35px',
+                  width: '480px',
+                  height: 'auto',
+
+                }} >
+
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
+                  Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                </Typography>
+
+              </Stack>
+
+              <Stack
+                display="-webkit-inline-box"
+                sx={{
+                  pt: '35px',
+                  width: '480px',
+                  height: 'auto',
+                  pl: '126px'
+                }} >
+                <Typography>
+                  <Typography sx={{
+                    backgroundColor: theme.palette.primary.main,
+                    p: "6px",
+                    borderRadius: "13px"
+                     }}
+                  >
+                  Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                </Typography>
+              </Typography>
+
+
+            </Stack>
+
+            <Stack
+              display="-webkit-inline-box"
+              sx={{
+                pt: '35px',
+                width: '480px',
+                height: 'auto',
+
               }} >
-              Hello content here
-            </Typography>
-            <Typography>
-              Hello content here
-            </Typography>
-            <Typography>
-              Hello content here
-            </Typography>
-             <Typography>
-              Hello content here
-            </Typography>
+
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
+                Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+              </Typography>
+
+            </Stack>
+
           </Stack>
           {/*  */}
-         
+
           <TextField
             fullWidth
             placeholder="Type your message..."
@@ -139,10 +177,10 @@ export default function Chatbot() {
             }}
             sx={{ p: 0.5 }}
           />
-       
-          </Popover>
-        </Box>
+
+        </Popover>
       </Box>
+    </Box >
     </>
   );
 }
