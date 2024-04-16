@@ -47,7 +47,7 @@ const chatData = [
   }
   ,
   {id:5,
-    isBot: true,
+    isBot: false,
     avatarUrl: '/static/images/avatar/1.jpg',
     message:
       'Hello content here Hello content hereHello content hereHello content hereHello  content hereHello content hereHello content hereHello content hereHello content  hereHello content hereHello content hereHello content hereHello content here '
@@ -99,7 +99,7 @@ export default function Chatbot() {
             top: '95%',
             color: 'grey.800',
             position: 'absolute',
-            borderRadius: '24px 0 16px 24px'
+            borderRadius: '24px 0 16px 24px',
           }}
         >
           <Fab color="primary" aria-describedby={id} onClick={handleClick}>
@@ -141,6 +141,7 @@ export default function Chatbot() {
             {/* --------------------- Message ------------------------- */}
             <Scrollbar
               sx={{
+                bottom: '24px',
                 height:'500px',
                 '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
                   height: 0
@@ -151,6 +152,7 @@ export default function Chatbot() {
                 
                 sx={{
                   
+                
                   width: '450px',
                   height: '450px',
                   top: 12,
@@ -211,8 +213,7 @@ function ChatMessage({ message }) {
       {isBot && (
         <Avatar alt="Bot" src={avatarUrl} sx={{ mr: '9px', ml: '-10px' }} />
       )}
-      <Typography>
-        <Typography
+          <Typography
           sx={{
            
             backgroundColor: isBot ? 'transparent' : 'primary.main', 
@@ -222,7 +223,6 @@ function ChatMessage({ message }) {
         >
           {content}
         </Typography>
-      </Typography>
     </Stack>
   ))
   
