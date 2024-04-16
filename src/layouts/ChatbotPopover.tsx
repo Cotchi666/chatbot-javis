@@ -3,7 +3,17 @@ import { Icon } from '@iconify/react';
 import closeFill from '@iconify/icons-eva/close-fill';
 import options2Fill from '@iconify/icons-eva/options-2-fill';
 // material
-import { Button, Box, Backdrop, Paper, Tooltip, Divider, Typography, Stack, IconButton } from '@mui/material';
+import {
+  Button,
+  Box,
+  Backdrop,
+  Paper,
+  Tooltip,
+  Divider,
+  Typography,
+  Stack,
+  IconButton
+} from '@mui/material';
 //
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
@@ -27,10 +37,9 @@ export default function Chatbot() {
   const theme = useTheme();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget)
+    console.log(event.currentTarget);
     if (anchorEl == null) {
       setAnchorEl(event.currentTarget);
-
     } else {
       setAnchorEl(null);
     }
@@ -45,10 +54,8 @@ export default function Chatbot() {
 
   return (
     <>
-
       <Box
         sx={{
-
           top: 12,
           bottom: 12,
           right: 0,
@@ -59,7 +66,6 @@ export default function Chatbot() {
       >
         <Box
           sx={{
-
             p: 0.5,
             px: '4px',
             mt: -3,
@@ -67,7 +73,7 @@ export default function Chatbot() {
             top: '95%',
             color: 'grey.800',
             position: 'absolute',
-            borderRadius: '24px 0 16px 24px',
+            borderRadius: '24px 0 16px 24px'
           }}
         >
           <Fab color="primary" aria-describedby={id} onClick={handleClick}>
@@ -81,20 +87,29 @@ export default function Chatbot() {
             onClose={handleClose}
             anchorOrigin={{
               vertical: 'top',
-              horizontal: 'left',
+              horizontal: 'left'
             }}
             transformOrigin={{
               vertical: 'bottom',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
           >
             {/*  */}
-            <Stack direction="row" justifyContent="space-between" sx={{ backgroundColor: theme.palette.primary.main }}>
-              <Typography sx={{ width: '500px', p: "9px", height: '33px' }} variant="h6" ><SmartToyOutlinedIcon /></Typography>
-              <IconButton aria-label="fingerprint" onClick={handleClose} sx={{ height: '40px', alignItems: "flex-start" }}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{ backgroundColor: theme.palette.primary.main }}
+            >
+              <Typography sx={{ width: '500px', p: '9px', height: '33px' }} variant="h6">
+                <SmartToyOutlinedIcon />
+              </Typography>
+              <IconButton
+                aria-label="fingerprint"
+                onClick={handleClose}
+                sx={{ height: '40px', alignItems: 'flex-start' }}
+              >
                 <RemoveOutlinedIcon />
               </IconButton>
-
             </Stack>
             {/* <Divider  /> */}
             {/*  */}
@@ -102,7 +117,7 @@ export default function Chatbot() {
               sx={{
                 '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
                   height: 0
-                },
+                }
               }}
             >
               <Stack
@@ -115,21 +130,29 @@ export default function Chatbot() {
                   p: 3,
                   pt: 0.5
                 }}
-
-                direction="column" justifyContent="space-between" alignItems="start" display="flow">
+                direction="column"
+                justifyContent="space-between"
+                alignItems="start"
+                display="flow"
+              >
                 <Stack
                   display="-webkit-inline-box"
                   sx={{
                     pt: '35px',
                     width: '480px',
-                    height: 'auto',
-
-                  }} >
-
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
-                    Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                    height: 'auto'
+                  }}
+                >
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/static/images/avatar/1.jpg"
+                    sx={{ mr: '9px', ml: '-10px' }}
+                  />{' '}
+                  <Typography>
+                    Hello content here Hello content hereHello content hereHello content hereHello
+                    content hereHello content hereHello content hereHello content hereHello content
+                    hereHello content hereHello content hereHello content hereHello content here
                   </Typography>
-
                 </Stack>
                 {/* user chat */}
                 <Stack
@@ -139,19 +162,22 @@ export default function Chatbot() {
                     width: '480px',
                     height: 'auto',
                     pl: '126px'
-                  }} >
+                  }}
+                >
                   <Typography>
-                    <Typography sx={{
-                      backgroundColor: theme.palette.primary.main,
-                      p: "12px 27px",
-                      borderRadius: "13px"
-                    }}
+                    <Typography
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        p: '12px 27px',
+                        borderRadius: '13px'
+                      }}
                     >
-                      Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                      Hello content here Hello content hereHello content hereHello content hereHello
+                      content hereHello content hereHello content hereHello content hereHello
+                      content hereHello content hereHello content hereHello content hereHello
+                      content here
                     </Typography>
                   </Typography>
-
-
                 </Stack>
 
                 <Stack
@@ -159,16 +185,20 @@ export default function Chatbot() {
                   sx={{
                     pt: '35px',
                     width: '480px',
-                    height: 'auto',
-
-                  }} >
-
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ mr: '9px', ml: '-10px' }} />  <Typography>
-                    Hello content here Hello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content hereHello content here
+                    height: 'auto'
+                  }}
+                >
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/static/images/avatar/1.jpg"
+                    sx={{ mr: '9px', ml: '-10px' }}
+                  />{' '}
+                  <Typography>
+                    Hello content here Hello content hereHello content hereHello content hereHello
+                    content hereHello content hereHello content hereHello content hereHello content
+                    hereHello content hereHello content hereHello content hereHello content here
                   </Typography>
-
                 </Stack>
-
               </Stack>
             </Scrollbar>
 
@@ -183,14 +213,13 @@ export default function Chatbot() {
                   <IconButton color="primary">
                     <SendIcon />
                   </IconButton>
-                ),
+                )
               }}
               sx={{ p: 0.5 }}
             />
-
           </Popover>
         </Box>
-      </Box >
+      </Box>
     </>
   );
 }

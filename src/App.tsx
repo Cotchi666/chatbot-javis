@@ -21,7 +21,7 @@ export default function App() {
         <RtlLayout>
           <NotistackProvider>
             <GlobalStyles />
-            <ChatbotPopover/>
+            <ChatbotPopover />
 
             <ProgressBarStyle />
             <Settings />
