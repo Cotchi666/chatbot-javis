@@ -42,17 +42,50 @@ export default function Chatbot() {
     setInput(event.target.value);
   };
 
-  const handleInputSend = () => {
+  const handleInputSend = async () => {
     if (!input.trim()) return;
-    const newMessage: ChatMessage = {
+
+    const userMessage: ChatMessage = {
       id: chatData.length + 1,
       isBot: false,
       avatarUrl: '/static/images/avatar/1.jpg',
       message: input
     };
-    setChatData(prevChatData => [...prevChatData, newMessage]);
+
+    setChatData(prevChatData => [...prevChatData, userMessage]);
     setInput('');
+    try {
+      // const response = await fetch('/your-backend-api-endpoint', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({ message: input })
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error('Failed to fetch response from backend');
+      // }
+
+      // Parse the response JSON
+      // const responseData = await response.json();
+      const responseData = {
+        message: "Iam a bot",
+      }
+
+      const botMessage: ChatMessage = {
+        id: chatData.length + 2, 
+        isBot: true,
+        avatarUrl: '/static/images/avatar/bot.jpg',
+        message: responseData.message 
+      };
+
+      setChatData(prevChatData => [...prevChatData, botMessage]);
+    } catch (error) {
+      console.error('Error fetching response from backend:', error);
+    }
   };
+
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
@@ -87,8 +120,8 @@ export default function Chatbot() {
   return (
 
     <>
-       <Box sx={{ top: 12, bottom: 12, right: 0, position: 'fixed', zIndex: 2001, ...(open && { right: 12 }) }}>
-      <Box sx={{ p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute', borderRadius: '24px 0 16px 24px' }}>
+      <Box sx={{ top: 12, bottom: 12, right: 0, position: 'fixed', zIndex: 2001, ...(open && { right: 12 }) }}>
+        <Box sx={{ p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute', borderRadius: '24px 0 16px 24px' }}>
           <Fab color="primary" aria-describedby={id} onClick={toggleChatbot}>
             <SmartToyOutlinedIcon />
           </Fab>
@@ -98,44 +131,44 @@ export default function Chatbot() {
       </Box>
       {isOpen && (
 
-        <Stack sx={{  top: 12, bottom: '656px', right: '542px', position: 'fixed', zIndex: 2001, ...(open && { right: 12 }) }}>
-           <Stack sx={{borderRadius:'2px',   outline: 'solid', backgroundColor:'white', p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute' }}>
-          <Stack direction="row" justifyContent="space-between" sx={{ backgroundColor: theme.palette.primary.main }}>
-            <Typography sx={{ width: '500px', p: '9px', height: '33px' }} variant="h6">
-              <SmartToyOutlinedIcon />
-            </Typography>
-            <IconButton aria-label="fingerprint" onClick={handleClose} sx={{ height: '40px', alignItems: 'flex-start' }}>
-              <RemoveOutlinedIcon />
-            </IconButton>
-          </Stack>
-          <Scrollbar scrollableNodeProps={{ ref: scrollRef }} sx={{ bottom: '24px', height: '500px', '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': { height: 0 } }}>
-            <Stack
-              sx={{ width: '450px', height: '450px', top: 12, bottom: 12, right: 0, p: 3, pt: 0.5 }} direction="column" justifyContent="space-between" alignItems="start" display="flow">
-              {chatData.map((message, id) => (
-                <ChatMessage key={id} message={message} />
-              ))}
-              <div ref={chatContainerRef}></div>
+        <Stack sx={{ top: 12, bottom: '656px', right: '542px', position: 'fixed', zIndex: 2001, ...(open && { right: 12 }) }}>
+          <Stack sx={{ borderRadius: '2px', outline: 'solid', backgroundColor: 'white', p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute' }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ backgroundColor: theme.palette.primary.main }}>
+              <Typography sx={{ width: '500px', p: '9px', height: '33px' }} variant="h6">
+                <SmartToyOutlinedIcon />
+              </Typography>
+              <IconButton aria-label="fingerprint" onClick={handleClose} sx={{ height: '40px', alignItems: 'flex-start' }}>
+                <RemoveOutlinedIcon />
+              </IconButton>
             </Stack>
-          </Scrollbar>
-          <TextField
+            <Scrollbar scrollableNodeProps={{ ref: scrollRef }} sx={{ bottom: '24px', height: '500px', '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': { height: 0 } }}>
+              <Stack
+                sx={{ width: '450px', height: '450px', top: 12, bottom: 12, right: 0, p: 3, pt: 0.5 }} direction="column" justifyContent="space-between" alignItems="start" display="flow">
+                {chatData.map((message, id) => (
+                  <ChatMessage key={id} message={message} />
+                ))}
+                <div ref={chatContainerRef}></div>
+              </Stack>
+            </Scrollbar>
+            <TextField
 
-            fullWidth
-            placeholder="Type your message..."
-            variant="outlined"
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
-            InputProps={{
-              endAdornment: (
-                <IconButton color="primary" onClick={handleInputSend}>
-                  <SendIcon />
-                </IconButton>
-              )
-            }}
-          />
+              fullWidth
+              placeholder="Type your message..."
+              variant="outlined"
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              InputProps={{
+                endAdornment: (
+                  <IconButton color="primary" onClick={handleInputSend}>
+                    <SendIcon />
+                  </IconButton>
+                )
+              }}
+            />
           </Stack>
-          </Stack>
-       
+        </Stack>
+
       )}
     </>
   );
