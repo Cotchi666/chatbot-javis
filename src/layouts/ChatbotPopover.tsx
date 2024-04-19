@@ -9,20 +9,20 @@ import { chatData } from 'utils/mock-data/chat';
 import SimpleBar from 'simplebar';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
-
+import { getAllMessages, createMessage } from 'contexts/apis';
 interface ChatMessage {
   id: number;
-  isBot: boolean;
+  chatBotMessage: string;
   avatarUrl: string;
   message: string;
 }
 
-const initialChatData = chatData as ChatMessage[];
+// const initialChatData = chatData as ChatMessage[];
 
 export default function Chatbot() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const theme = useTheme();
-  const [chatData, setChatData] = useState<ChatMessage[]>(initialChatData);
+  const [chatData, setChatData] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -45,15 +45,16 @@ export default function Chatbot() {
   const handleInputSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage: ChatMessage = {
-      id: chatData.length + 1,
-      isBot: false,
-      avatarUrl: '/static/images/avatar/1.jpg',
-      message: input
-    };
+    // const userMessage: ChatMessage = {
+    //   id: chatData.length + 1,
+    //   // isBot: false,
+    //   avatarUrl: '/static/images/avatar/1.jpg',
+    //   message: input,
+    //   chatBotMessage: ''
+    // };
 
-    setChatData(prevChatData => [...prevChatData, userMessage]);
-    setInput('');
+    // setChatData(prevChatData => [...prevChatData, userMessage]);
+    // setInput('');
     try {
       // const response = await fetch('/your-backend-api-endpoint', {
       //   method: 'POST',
@@ -71,13 +72,15 @@ export default function Chatbot() {
       // const responseData = await response.json();
       const responseData = {
         message: "Iam a bot",
+        chatBotMessage: " hehehee"
       }
 
       const botMessage: ChatMessage = {
-        id: chatData.length + 2, 
-        isBot: true,
+        id: chatData.length + 2,
+        // isBot: true,
         avatarUrl: '/static/images/avatar/bot.jpg',
-        message: responseData.message 
+        message: responseData.message,
+        chatBotMessage: responseData.chatBotMessage
       };
 
       setChatData(prevChatData => [...prevChatData, botMessage]);
@@ -99,9 +102,18 @@ export default function Chatbot() {
     setIsOpen(!isOpen);
   };
   // const chatContainerRef = useRef(null);
+  // useEffect(() => {
+  //   // setChatData()
 
+  // }, []);
+  const getAllMessagesFromBackend = async ()=>{
+    const res = await getAllMessages("6621dec4146fbe6b65d6cbe6")
+    console.log(res.data.data.messages)
+    setChatData(res.data.data.messages)
+  };
+  useEffect(() => {getAllMessagesFromBackend()},[])
   useEffect(() => {
-
+    
     const scrollMessagesToBottom = () => {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -145,7 +157,7 @@ export default function Chatbot() {
               <Stack
                 sx={{ width: '450px', height: '450px', top: 12, bottom: 12, right: 0, p: 3, pt: 0.5 }} direction="column" justifyContent="space-between" alignItems="start" display="flow">
                 {chatData.map((message, id) => (
-                  <ChatMessage key={id} message={message} />
+                  <ChatMessage key={id} chatMessage={message} />
                 ))}
                 <div ref={chatContainerRef}></div>
               </Stack>
@@ -174,38 +186,95 @@ export default function Chatbot() {
   );
 
 }
+const ChatMessage = React.forwardRef<HTMLDivElement, { chatMessage: ChatMessage }>(({ chatMessage }, ref) => {
+  if (!chatMessage) return null; // Handle undefined message
 
-const ChatMessage = React.forwardRef<HTMLDivElement, { message: ChatMessage }>(({ message }, ref) => {
-  if (!message) return null; // Handle undefined message
-
-  const { isBot, avatarUrl, message: content } = message;
-
+  const {id, chatBotMessage, message } = chatMessage
+  const avatarUrl = " "
   return (
     <div ref={ref}>
       <Stack
         display="-webkit-inline-box"
         sx={{
           pt: '35px',
-          width: isBot ? '480px' : '497px',
+          width: '497px',
           height: 'auto',
-          pl: isBot ? '0px' : '105px',
-          alignItems: isBot ? 'start' : 'end',
-          display: isBot ? '-webkit-inline-box' : 'flex',
+          pl: '105px',
+          alignItems: 'end',
+          display: 'flex',
         }}
       >
-        {isBot && (
+      
+        <Typography
+          sx={{
+            backgroundColor: 'primary.main',
+            p: '12px 27px',
+            borderRadius: '13px'
+          }}
+        >
+          {message}
+        </Typography>
+      </Stack>
+      <Stack
+        display="-webkit-inline-box"
+        sx={{
+          pt: '35px',
+          width: chatBotMessage ? '480px' : '497px',
+          height: 'auto',
+          pl: chatBotMessage ? '0px' : '105px',
+          alignItems: chatBotMessage ? 'start' : 'end',
+          display: chatBotMessage ? '-webkit-inline-box' : 'flex',
+        }}
+      >
+        {chatBotMessage && (
           <Avatar alt="Bot" src={avatarUrl} sx={{ mr: '9px', ml: '-10px' }} />
         )}
         <Typography
           sx={{
-            backgroundColor: isBot ? 'transparent' : 'primary.main',
-            p: isBot ? '0px 0px' : '12px 27px',
-            borderRadius: isBot ? ' ' : '13px'
+            backgroundColor: chatBotMessage ? 'transparent' : 'primary.main',
+            p: chatBotMessage ? '0px 0px' : '12px 27px',
+            borderRadius: chatBotMessage ? ' ' : '13px'
           }}
         >
-          {content}
+          {chatBotMessage}
         </Typography>
       </Stack>
+      
     </div>
   );
 });
+
+// const ChatMessage = React.forwardRef<HTMLDivElement, { message: ChatMessage }>(({ message }, ref) => {
+//   if (!message) return null; // Handle undefined message
+
+//   const { isBot, avatarUrl, message: content } = message;
+
+//   return (
+//     <div ref={ref}>
+//       <Stack
+//         display="-webkit-inline-box"
+//         sx={{
+//           pt: '35px',
+//           width: isBot ? '480px' : '497px',
+//           height: 'auto',
+//           pl: isBot ? '0px' : '105px',
+//           alignItems: isBot ? 'start' : 'end',
+//           display: isBot ? '-webkit-inline-box' : 'flex',
+//         }}
+//       >
+//         {isBot && (
+//           <Avatar alt="Bot" src={avatarUrl} sx={{ mr: '9px', ml: '-10px' }} />
+//         )}
+//         <Typography
+//           sx={{
+//             backgroundColor: isBot ? 'transparent' : 'primary.main',
+//             p: isBot ? '0px 0px' : '12px 27px',
+//             borderRadius: isBot ? ' ' : '13px'
+//           }}
+//         >
+//           {content}
+//         </Typography>
+//       </Stack>
+//     </div>
+//   );
+// });
