@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Popover, TextField, Avatar, Box, Fab, Typography, Stack, IconButton } from '@mui/material';
+import { TextField, Avatar, Box, Fab, Typography, Stack, IconButton } from '@mui/material';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Scrollbar from 'components/Scrollbar';
-import { chatData } from 'utils/mock-data/chat';
-import SimpleBar from 'simplebar';
-import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
-import { styled } from '@mui/system';
+
 import { getAllMessages, createMessage } from 'contexts/apis';
 interface ChatMessage {
   id: number;
@@ -17,7 +14,6 @@ interface ChatMessage {
   message: string;
 }
 
-// const initialChatData = chatData as ChatMessage[];
 
 export default function Chatbot() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -44,44 +40,24 @@ export default function Chatbot() {
 
   const handleInputSend = async () => {
     if (!input.trim()) return;
-
-    // const userMessage: ChatMessage = {
-    //   id: chatData.length + 1,
-    //   // isBot: false,
-    //   avatarUrl: '/static/images/avatar/1.jpg',
-    //   message: input,
-    //   chatBotMessage: ''
-    // };
-
-    // setChatData(prevChatData => [...prevChatData, userMessage]);
-    // setInput('');
+    setInput('');
     try {
-      // const response = await fetch('/your-backend-api-endpoint', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({ message: input })
-      // });
+      const response = await createMessage(input, "6621dec4146fbe6b65d6cbe6")
 
-      // if (!response.ok) {
-      //   throw new Error('Failed to fetch response from backend');
-      // }
+      console.log(response.data.data.createChatBotMessage)
 
-      // Parse the response JSON
-      // const responseData = await response.json();
       const responseData = {
-        message: "Iam a bot",
-        chatBotMessage: " hehehee"
+        message: response.data.data.createChatBotMessage.message,
+        chatBotMessage: response.data.data.createChatBotMessage.chatBotMessage
       }
 
       const botMessage: ChatMessage = {
         id: chatData.length + 2,
-        // isBot: true,
         avatarUrl: '/static/images/avatar/bot.jpg',
         message: responseData.message,
         chatBotMessage: responseData.chatBotMessage
       };
+      console.log("first",botMessage)
 
       setChatData(prevChatData => [...prevChatData, botMessage]);
     } catch (error) {
@@ -101,11 +77,7 @@ export default function Chatbot() {
     console.log(isOpen)
     setIsOpen(!isOpen);
   };
-  // const chatContainerRef = useRef(null);
-  // useEffect(() => {
-  //   // setChatData()
 
-  // }, []);
   const getAllMessagesFromBackend = async ()=>{
     const res = await getAllMessages("6621dec4146fbe6b65d6cbe6")
     console.log(res.data.data.messages)
