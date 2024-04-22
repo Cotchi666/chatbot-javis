@@ -5,6 +5,8 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Scrollbar from 'components/Scrollbar';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import Skeleton from '@mui/material/Skeleton';
 
 import { getAllMessages, createMessage } from 'contexts/apis';
 interface ChatMessage {
@@ -23,6 +25,7 @@ export default function Chatbot() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -41,54 +44,43 @@ export default function Chatbot() {
 
   const handleInputSend = async () => {
     if (!input.trim()) return;
-    setInput('');
-    // const userMessage: ChatMessage = {
-    //   id: chatData.length + 1,
-    //   avatarUrl: '', // You can set the user's avatar URL here
-    //   message: input,
-    //   chatBotMessage: '' // Assuming this property is not applicable for user messages
-    // };
-
-    // setChatData(prevChatData => [...prevChatData, userMessage]);
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await createMessage(input, "6621dec4146fbe6b65d6cbe6")
-      console.log(response.data)
-
-      console.log(response.data.data.createChatBotMessage)
-
-      const responseData = {
-        message: response.data.data.createChatBotMessage.message,
-        chatBotMessage: response.data.data.createChatBotMessage.chatBotMessage
-      }
-      // const responseData = {
-      //   id: chatData.length + 2,
-      //   chatBotMessage: 'This is a bot response.', // Replace with actual bot response
-      //   avatarUrl: '/static/images/avatar/bot.jpg', // Set appropriate bot avatar URL here
-      //   message: '' // Set appropriate bot response message here
-      // };
-
-      // // Simulated delay for backend response
-      // await new Promise(resolve => setTimeout(resolve, 10000));
-
-      // setChatData(prevChatData => [...prevChatData, responseData]);
-      const botMessage: ChatMessage = {
-        id: chatData.length + 2,
-        avatarUrl: '/static/images/avatar/bot.jpg',
-        message: responseData.message,
-        chatBotMessage: responseData.chatBotMessage
+      const userMessage: ChatMessage = {
+        id: Date.now(), // Generate a unique ID for the user message
+        avatarUrl: '', // You can set the user's avatar URL here
+        message: input,
+        chatBotMessage: 'waiting ...' // Assuming this property is not applicable for user messages
       };
-      console.log("first", botMessage)
 
-      setChatData(prevChatData => [...prevChatData, botMessage]);
-      console.log(chatData)
+      // Add the user's message to the chatData
+      setChatData([...chatData, userMessage]);
+
+      const response = await createMessage(input, "6621dec4146fbe6b65d6cbe6");
+      const responseData = {
+        id: response.data.data.createMessage._id,
+        message: response.data.data.createMessage.message,
+        chatBotMessage: response.data.data.createMessage.chatBotMessage
+      };
+
+
+      const chatbotMessage: ChatMessage = {
+        id: responseData.id, // Generate a unique ID for the user message
+        avatarUrl: '', // You can set the user's avatar URL here
+        message: responseData.message,
+        chatBotMessage: responseData.chatBotMessage // Assuming this property is not applicable for user messages
+      };
+
+      setChatData([...chatData, chatbotMessage]);
+
     } catch (error) {
       console.error('Error fetching response from backend:', error);
     } finally {
-      setLoading(false)
-
+      setLoading(false);
+      setInput(''); // Clear input field
     }
   };
+
 
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -99,16 +91,33 @@ export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleChatbot = () => {
-    console.log(isOpen)
     setIsOpen(!isOpen);
   };
 
   const getAllMessagesFromBackend = async () => {
-    const res = await getAllMessages("6621dec4146fbe6b65d6cbe6")
-    console.log(res.data)
+    setDataLoading(true)
+    const res = await getAllMessages("6621dec4146fbe6b65d6cbe6");
 
-    console.log(res.data.data.messages)
-    setChatData(res.data.data.messages)
+    // Check if res.data.data is null or undefined
+    if (!res.data.data) {
+      // If null or undefined, set chatData to an empty array
+      setChatData([]);
+      setDataLoading(false)
+      return;
+    }
+
+    // Check if res.data.data.messages is null or undefined
+    const messages = res.data.data.messages;
+    if (!messages) {
+      // If null or undefined, set chatData to an empty array
+      setChatData([]);
+      setDataLoading(false)
+      return;
+    }
+
+    // Set chatData to the received messages
+    setChatData(messages);
+    setDataLoading(false)
   };
   useEffect(() => { getAllMessagesFromBackend() }, [])
   useEffect(() => {
@@ -135,10 +144,7 @@ export default function Chatbot() {
         <Box sx={{ p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute', borderRadius: '24px 0 16px 24px' }}>
           <Fab color="primary" aria-describedby={id} onClick={toggleChatbot}>
             <SmartToyOutlinedIcon />
-
           </Fab>
-
-
         </Box>
       </Box>
       {isOpen && (
@@ -166,9 +172,17 @@ export default function Chatbot() {
             <Scrollbar scrollableNodeProps={{ ref: scrollRef }} sx={{ bottom: '24px', height: '500px', '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': { height: 0 } }}>
               <Stack
                 sx={{ width: '450px', height: '450px', top: 12, bottom: 12, right: 0, p: 3, pt: 0.5 }} direction="column" justifyContent="space-between" alignItems="start" display="flow">
-                {chatData.map((message, id) => (
+                {dataLoading === false ? chatData.map((message, id) => (
                   <ChatMessage key={id} chatMessage={message} loading={loading} />
-                ))}
+                )) : <>
+                  <Skeleton sx={{ width: 500, height: 100 }} />
+                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+
+                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+
+                  <Skeleton animation={false} sx={{ width: 500 }}/></>}
                 <div ref={chatContainerRef}></div>
               </Stack>
             </Scrollbar>
@@ -178,6 +192,7 @@ export default function Chatbot() {
                   color: "#999393"
                 }
               }}
+              disabled={loading} // Disable TextField when input is null or empty
               fullWidth
               placeholder="Message Javis..."
               variant="outlined"
@@ -187,7 +202,7 @@ export default function Chatbot() {
               InputProps={{
                 endAdornment: (
                   <IconButton color="primary" onClick={handleInputSend}>
-                    <SendIcon />
+                    <SendRoundedIcon />
                   </IconButton>
                 )
               }}
@@ -208,12 +223,11 @@ interface ChatMessageProps {
   };
   loading: boolean; // Define the loading prop
 }
-const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMessage, loading }, ref) => {
+const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMessage }, ref) => {
   if (!chatMessage) return null; // Handle undefined message
   const theme = useTheme();
 
   const { id, chatBotMessage, message } = chatMessage
-  const isLoading = loading;
   const avatarUrl = " "
   return (
 
@@ -255,7 +269,6 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMe
         }}
       >
         {chatBotMessage && (
-          // <Avatar alt="Bot" src={avatarUrl} sx={{ mr: '9px', ml: '-10px' }} startIcon={{ 
           <Box sx={{
             mr: '9px',
             ml: '-10px',
@@ -280,7 +293,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMe
           {chatBotMessage}
         </Typography>
       </Stack>
-     </div> {isLoading === false ? (<span> </span>) : (<>loading</>)}
-     </>
+    </div>
+    </>
   );
 });
