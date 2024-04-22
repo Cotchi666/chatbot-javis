@@ -42,6 +42,14 @@ export default function Chatbot() {
   const handleInputSend = async () => {
     if (!input.trim()) return;
     setInput('');
+    // const userMessage: ChatMessage = {
+    //   id: chatData.length + 1,
+    //   avatarUrl: '', // You can set the user's avatar URL here
+    //   message: input,
+    //   chatBotMessage: '' // Assuming this property is not applicable for user messages
+    // };
+
+    // setChatData(prevChatData => [...prevChatData, userMessage]);
     setLoading(true)
     try {
       const response = await createMessage(input, "6621dec4146fbe6b65d6cbe6")
@@ -53,7 +61,17 @@ export default function Chatbot() {
         message: response.data.data.createChatBotMessage.message,
         chatBotMessage: response.data.data.createChatBotMessage.chatBotMessage
       }
+      // const responseData = {
+      //   id: chatData.length + 2,
+      //   chatBotMessage: 'This is a bot response.', // Replace with actual bot response
+      //   avatarUrl: '/static/images/avatar/bot.jpg', // Set appropriate bot avatar URL here
+      //   message: '' // Set appropriate bot response message here
+      // };
 
+      // // Simulated delay for backend response
+      // await new Promise(resolve => setTimeout(resolve, 10000));
+
+      // setChatData(prevChatData => [...prevChatData, responseData]);
       const botMessage: ChatMessage = {
         id: chatData.length + 2,
         avatarUrl: '/static/images/avatar/bot.jpg',
@@ -63,7 +81,7 @@ export default function Chatbot() {
       console.log("first", botMessage)
 
       setChatData(prevChatData => [...prevChatData, botMessage]);
-
+      console.log(chatData)
     } catch (error) {
       console.error('Error fetching response from backend:', error);
     } finally {
@@ -136,7 +154,7 @@ export default function Chatbot() {
                   fontFamily: 'fantasy',
                   display: 'revert',
                   paddingTop: '10px',
-                  
+
                 }}>JAVIS</Typography>
 
               </Typography>
@@ -155,7 +173,11 @@ export default function Chatbot() {
               </Stack>
             </Scrollbar>
             <TextField
-            sx={{'& .MuiOutlinedInput-root':{borderRadius: '2px'}}}
+              sx={{
+                '& .MuiOutlinedInput-root': { borderRadius: '2px' }, '& .MuiOutlinedInput-input': {
+                  color: "#999393"
+                }
+              }}
               fullWidth
               placeholder="Message Javis..."
               variant="outlined"
@@ -258,45 +280,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMe
           {chatBotMessage}
         </Typography>
       </Stack>
-
-
-
-    </div>
-      {isLoading === false ? (<span> </span>) : (<>loading</>)}</>
+     </div> {isLoading === false ? (<span> </span>) : (<>loading</>)}
+     </>
   );
 });
-
-// const ChatMessage = React.forwardRef<HTMLDivElement, { message: ChatMessage }>(({ message }, ref) => {
-//   if (!message) return null; // Handle undefined message
-
-//   const { isBot, avatarUrl, message: content } = message;
-
-//   return (
-//     <div ref={ref}>
-//       <Stack
-//         display="-webkit-inline-box"
-//         sx={{
-//           pt: '35px',
-//           width: isBot ? '480px' : '497px',
-//           height: 'auto',
-//           pl: isBot ? '0px' : '105px',
-//           alignItems: isBot ? 'start' : 'end',
-//           display: isBot ? '-webkit-inline-box' : 'flex',
-//         }}
-//       >
-//         {isBot && (
-//           <Avatar alt="Bot" src={avatarUrl} sx={{ mr: '9px', ml: '-10px' }} />
-//         )}
-//         <Typography
-//           sx={{
-//             backgroundColor: isBot ? 'transparent' : 'primary.main',
-//             p: isBot ? '0px 0px' : '12px 27px',
-//             borderRadius: isBot ? ' ' : '13px'
-//           }}
-//         >
-//           {content}
-//         </Typography>
-//       </Stack>
-//     </div>
-//   );
-// });
