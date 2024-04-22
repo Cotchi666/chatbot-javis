@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const createMessage = async (messageText: string, conversationId: string) => {
+  console.log(messageText)
     const body = {
       query: `
       mutation 
@@ -28,7 +29,7 @@ export const createMessage = async (messageText: string, conversationId: string)
     
     let config = {
         headers: {
-          'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRlbW8xMjNAZ21haWwuY29tIiwic3ViIjoiNjYxYTY3NWMyYTM2YTYyZmY5M2JmOWMzIiwiaWF0IjoxNzEzNDk1NTk1LCJleHAiOjE3MTM1ODE5OTV9.Hz_wevi7J_Y7mqAoHQAXgfUdvx26NKMDHcs6wyuqGi0'
+          'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRlbW8xMjNAZ21haWwuY29tIiwic3ViIjoiNjYxYTY3NWMyYTM2YTYyZmY5M2JmOWMzIiwiaWF0IjoxNzEzNjgzMTczLCJleHAiOjE3MTM3Njk1NzN9.bBnwvkqyh0qIa_xDZhGsISpWu4W33zaJF0idOtLlAyA'
         }
       }
     const url = 'http://localhost:8000/graphql'; // Replace with your GraphQL endpoint URL
@@ -55,7 +56,7 @@ export const createMessage = async (messageText: string, conversationId: string)
     };
      let config = {
         headers: {
-          'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRlbW8xMjNAZ21haWwuY29tIiwic3ViIjoiNjYxYTY3NWMyYTM2YTYyZmY5M2JmOWMzIiwiaWF0IjoxNzEzNDk1NTk1LCJleHAiOjE3MTM1ODE5OTV9.Hz_wevi7J_Y7mqAoHQAXgfUdvx26NKMDHcs6wyuqGi0'
+          'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRlbW8xMjNAZ21haWwuY29tIiwic3ViIjoiNjYxYTY3NWMyYTM2YTYyZmY5M2JmOWMzIiwiaWF0IjoxNzEzNjgzMTczLCJleHAiOjE3MTM3Njk1NzN9.bBnwvkqyh0qIa_xDZhGsISpWu4W33zaJF0idOtLlAyA'
         }
       }
     const domainBackend = process.env.REACT_APP_BACKEND_HOST
