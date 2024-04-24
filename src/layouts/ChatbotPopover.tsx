@@ -9,7 +9,7 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { getAllMessages, createMessage } from 'contexts/apis';
+import { getAllMessages, createMessage, updateAccessChatbot } from 'contexts/apis';
 import ArrowUpwardTwoToneIcon from '@mui/icons-material/ArrowUpwardTwoTone';
 import VpnKeyTwoToneIcon from '@mui/icons-material/VpnKeyTwoTone';
 import Dialog from '@mui/material/Dialog';
@@ -58,7 +58,7 @@ export default function Chatbot() {
   const handleOpenAIKeyInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOpenAIKeyInput(event.target.value);
   };
-  
+
   const handleInputSend = async () => {
     if (!input.trim()) return;
     setLoading(true);
@@ -125,26 +125,37 @@ export default function Chatbot() {
     console.log(openDialog)
     setOpenDialog(!openDialog)
   };
-  const setSendOpenAiKey = () => {
+  const setSendOpenAiKey = async () => {
     if (!openAIKeyInput.trim()) return;
-    
+
     // Send the input value to your backend or handle it as needed
     console.log("Input value:", openAIKeyInput);
+    const res = await updateAccessChatbot(openAIKeyInput)
   
-    setOpenAIKeyInput('')
-    setOpenOpenAiKeyPopup()
-    setError(false)
+    console.log(res.data.errors[0].message)
+    if (res.data.errors[0].message === 'Unauthorized') {
+      setOpenAIKeyInput('')
+      setOpenOpenAiKeyPopup()
+      setError(true)
+    } else {
+      setOpenAIKeyInput('')
+      setOpenOpenAiKeyPopup()
+      setError(false)
+    }
+
   };
   // setSendOpenAiKey
   const getAllMessagesFromBackend = async () => {
     setDataLoading(true)
     const res = await getAllMessages("6621dec4146fbe6b65d6cbe6");
-    console.log(res.data.errors[0].message)
-    if (res.data.errors[0].message === 'Unauthorized') {
-      setError(true)
-    } else {
-      setError(false)
+    if (res.data.errors) {
+      if (res.data.errors[0].message === 'Unauthorized') {
+        setError(true)
+      } else {
+        setError(false)
+      }
     }
+
     // Check if res.data.data is null or undefined
     if (!res.data.data) {
       // If null or undefined, set chatData to an empty array
@@ -207,24 +218,24 @@ export default function Chatbot() {
             Let Google help apps determine location. This means sending anonymous
             location data to Google, even when no apps are running.
           </DialogContentText> */}
-          <TextField  
-              value={openAIKeyInput}
-              onChange={handleOpenAIKeyInputChange}
-               id="filled-basic" label="Filled" variant="filled" sx={{
-            '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
-              borderTopLeftRadius: '4px',
-              borderTopRightRadius: '4px',
-              width: '502px'
-            },
-            '& .css-ukvdse-MuiFormLabel-root-MuiInputLabel-root ': {
-              display: 'none'
-            },
-            // '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
-            //   width: '502px'
-            //  }  
-            //  ,
-            padding: '0px 24px'
-          }} />
+          <TextField
+            value={openAIKeyInput}
+            onChange={handleOpenAIKeyInputChange}
+            id="filled-basic" label="Filled" variant="filled" sx={{
+              '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
+                borderTopLeftRadius: '4px',
+                borderTopRightRadius: '4px',
+                width: '502px'
+              },
+              '& .css-ukvdse-MuiFormLabel-root-MuiInputLabel-root ': {
+                display: 'none'
+              },
+              // '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
+              //   width: '502px'
+              //  }  
+              //  ,
+              padding: '0px 24px'
+            }} />
 
         </DialogContent>
         <DialogActions >

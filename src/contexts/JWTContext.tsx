@@ -81,14 +81,16 @@ function AuthProvider({ children }: { children: ReactNode }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/api/account/my-account');
-          const { user } = response.data;
+          // const response = await axios.get('/api/account/my-account');
+          // const { user } = response.data;
+          // const response = await axios.get('/api/account/my-account');
+          // const { user } = null
 
           dispatch({
             type: Types.Initial,
             payload: {
               isAuthenticated: true,
-              user
+              user :null
             }
           });
         } else {
@@ -142,9 +144,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
     const response = await axios.post(url, body, options);
     console.log(response.data);
+    const accessToken = response.data.data.login.accessToken;
+    console.log('accessToken:', accessToken);
 
-    const { accessToken } = response.data;
-
+    window.localStorage.setItem('accessToken', accessToken);
     setSession(accessToken);
     dispatch({
       type: Types.Login,
@@ -217,9 +220,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const response = await axios.post(domainBackend, body, options);
 
     console.log('🚀 ~ accessToken:', response);
-    const { accessToken } = response.data;
+    const accessToken = response.data.data.login.accessToken;
     console.log('accessToken:', accessToken);
 
+    window.localStorage.setItem('accessToken', accessToken);
     dispatch({
       type: Types.Login,
       payload: {
@@ -252,7 +256,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = (email: string) => console.log(email);
 
-  const updateProfile = () => {};
+  const updateProfile = () => { };
 
   return (
     <AuthContext.Provider
