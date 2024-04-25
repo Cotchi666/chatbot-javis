@@ -9,7 +9,7 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { getAllMessages, createMessage, updateAccessChatbot, getChatCompletion } from 'contexts/apis';
+import { getAllMessages, createMessage, getChatCompletion } from 'contexts/apis';
 import ArrowUpwardTwoToneIcon from '@mui/icons-material/ArrowUpwardTwoTone';
 import VpnKeyTwoToneIcon from '@mui/icons-material/VpnKeyTwoTone';
 import Dialog from '@mui/material/Dialog';
@@ -42,8 +42,7 @@ export default function Chatbot() {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   const [isOpen, setIsOpen] = useState(false);
-
-
+  const conversationId = '6621f4f046eebc3e67f45406';
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
@@ -65,7 +64,7 @@ export default function Chatbot() {
       // Add the user's message to the chatData
       setChatData([...chatData, userMessage]);
 
-      const response = await createMessage(input, "6621dec4146fbe6b65d6cbe6");
+      const response = await createMessage(input, conversationId);
 
       const responseData = {
         id: response.data.data.createMessage._id,
@@ -91,14 +90,11 @@ export default function Chatbot() {
         };
 
         setChatData([...chatData, chatbotMessage]);
-
       }
-
     } catch (error) {
-      setError(true)
+      setError(true);
       console.error('Error fetching response from backend:', error);
     } finally {
-
       setLoading(false);
       setInput(''); // Clear input field
     }
@@ -114,58 +110,55 @@ export default function Chatbot() {
     setIsOpen(!isOpen);
   };
   const setOpenOpenAiKeyPopup = () => {
-    console.log(openDialog)
-    setOpenDialog(!openDialog)
+    console.log(openDialog);
+    setOpenDialog(!openDialog);
   };
   const setUpOpenAIKey = async () => {
     if (!openAIKeyInput.trim()) return;
-    setOpenAIKeyInput('')
-    const check = await getChatCompletion(openAIKeyInput)
+    setOpenAIKeyInput('');
+    const check = await getChatCompletion(openAIKeyInput);
     if (check !== false) {
       window.localStorage.setItem('openAIKey', openAIKeyInput);
-      await getAllMessagesFromBackend()
-      setOpenOpenAiKeyPopup()
-      setError(false)
+      await getAllMessagesFromBackend();
+      setOpenOpenAiKeyPopup();
+      setError(false);
       if (scrollRef.current) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     } else {
-      setOpenOpenAiKeyPopup()
-      setError(true)
+      setOpenOpenAiKeyPopup();
+      setError(true);
     }
-
-
-
   };
   // setUpOpenAIKey
   const getAllMessagesFromBackend = async () => {
-    const result = await checkOpenAIKeyInStorage()
+    const result = await checkOpenAIKeyInStorage();
     if (result === false) {
-      console.log(147)
+      console.log(147);
       setChatData([]);
-      setError(true)
-      setDataLoading(false)
+      setError(true);
+      setDataLoading(false);
       return;
     }
-    setDataLoading(true)
-    const res = await getAllMessages("6621dec4146fbe6b65d6cbe6");
-    console.log("144", res)
+    setDataLoading(true);
+    const res = await getAllMessages(conversationId);
+    console.log('144', res);
 
     if (res.data.errors) {
-      console.log(146, res.data.errors[0])
+      console.log(146, res.data.errors[0]);
       if (res.data.errors[0].message) {
-        console.log(146)
-        setError(true)
+        console.log(146);
+        setError(true);
       }
     } else {
-      setError(false)
+      setError(false);
     }
 
     // Check if res.data.data is null or undefined
     if (!res.data.data) {
       // If null or undefined, set chatData to an empty array
       setChatData([]);
-      setDataLoading(false)
+      setDataLoading(false);
       return;
     }
 
@@ -174,27 +167,26 @@ export default function Chatbot() {
     if (!messages) {
       // If null or undefined, set chatData to an empty array
       setChatData([]);
-      setDataLoading(false)
+      setDataLoading(false);
       return;
     }
 
     // Set chatData to the received messages
     setChatData(messages);
-    setDataLoading(false)
+    setDataLoading(false);
   };
   const checkOpenAIKeyInStorage = async () => {
     const apiKey = window.localStorage.getItem('openAIKey') ?? '';
-    const check = await getChatCompletion(apiKey)
+    const check = await getChatCompletion(apiKey);
     if (check !== false) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   };
   useEffect(() => {
-    getAllMessagesFromBackend()
-
-  }, [])
+    getAllMessagesFromBackend();
+  }, []);
   useEffect(() => {
     // when fetch all message
     const scrollMessagesToBottom = () => {
@@ -212,164 +204,241 @@ export default function Chatbot() {
     scrollMessagesToBottomMessage();
   }, [isOpen, chatData]);
 
-
   return (
-
     <>
-      {openDialog && <Dialog
+      {openDialog && (
+        <Dialog
+          sx={{
+            zIndex: 2002,
+            '& .css-1i4c58h-MuiPaper-root-MuiDialog-paper': {
+              width: '1000px'
+            }
+          }}
+          fullScreen={fullScreen}
+          open={openDialog}
+          onClose={setOpenOpenAiKeyPopup}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle sx={{ paddingBottom: '18px' }} id="responsive-dialog-title">
+            {'OpenAIKey in below: '}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              value={openAIKeyInput}
+              onChange={handleOpenAIKeyInputChange}
+              id="filled-basic"
+              label="Filled"
+              variant="filled"
+              sx={{
+                '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
+                  borderTopLeftRadius: '4px',
+                  borderTopRightRadius: '4px',
+                  width: '502px'
+                },
+                '& .css-ukvdse-MuiFormLabel-root-MuiInputLabel-root ': {
+                  display: 'none'
+                }
+                // '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
+                //   width: '502px'
+                //  }
+                //  ,
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={setOpenOpenAiKeyPopup}>
+              Cancel
+            </Button>
+            <Button onClick={setUpOpenAIKey} autoFocus>
+              Send
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
+      <Box
         sx={{
-          zIndex: 2002,
-          '& .css-1i4c58h-MuiPaper-root-MuiDialog-paper': {
-            width: '1000px'
-          }
+          top: 12,
+          bottom: 12,
+          right: 0,
+          position: 'fixed',
+          zIndex: 2001,
+          ...(open && { right: 12 })
         }}
-        fullScreen={fullScreen}
-        open={openDialog}
-        onClose={setOpenOpenAiKeyPopup}
-        aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle sx={{ paddingBottom: '18px' }} id="responsive-dialog-title">
-          {"OpenAIKey in below: "}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            value={openAIKeyInput}
-            onChange={handleOpenAIKeyInputChange}
-            id="filled-basic" label="Filled" variant="filled" sx={{
-              '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
-                borderTopLeftRadius: '4px',
-                borderTopRightRadius: '4px',
-                width: '502px'
-              },
-              '& .css-ukvdse-MuiFormLabel-root-MuiInputLabel-root ': {
-                display: 'none'
-              },
-              // '& .css-1r1hrxa-MuiInputBase-root-MuiFilledInput-root': {
-              //   width: '502px'
-              //  }  
-              //  ,
-
-            }} />
-
-        </DialogContent>
-        <DialogActions >
-          <Button autoFocus onClick={setOpenOpenAiKeyPopup}>
-            Cancel
-          </Button>
-          <Button onClick={setUpOpenAIKey} autoFocus>
-            Send
-          </Button>
-        </DialogActions>
-      </Dialog>}
-
-      <Box sx={{ top: 12, bottom: 12, right: 0, position: 'fixed', zIndex: 2001, ...(open && { right: 12 }) }}>
-        <Box sx={{ p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute', borderRadius: '24px 0 16px 24px' }}>
+        <Box
+          sx={{
+            p: 0.5,
+            px: '4px',
+            mt: -3,
+            left: -87,
+            top: '95%',
+            color: 'grey.800',
+            position: 'absolute',
+            borderRadius: '24px 0 16px 24px'
+          }}
+        >
           <Fab color="primary" aria-describedby={id} onClick={toggleChatbot}>
             <SmartToyOutlinedIcon />
           </Fab>
         </Box>
       </Box>
       {isOpen && (
-
-        <Stack sx={{ top: 12, bottom: '656px', right: '542px', position: 'fixed', zIndex: 2001, ...(open && { right: 12 }) }}>
-          <Stack sx={{ borderRadius: '2px', boxShadow: '1px 2px 7px 4px', backgroundColor: 'white', p: 0.5, px: '4px', mt: -3, left: -87, top: '95%', color: 'grey.800', position: 'absolute' }}>
+        <Stack
+          sx={{
+            top: 12,
+            bottom: '656px',
+            right: '542px',
+            position: 'fixed',
+            zIndex: 2001,
+            ...(open && { right: 12 })
+          }}
+        >
+          <Stack
+            sx={{
+              borderRadius: '2px',
+              boxShadow: '1px 2px 7px 4px',
+              backgroundColor: 'white',
+              p: 0.5,
+              px: '4px',
+              mt: -3,
+              left: -87,
+              top: '95%',
+              color: 'grey.800',
+              position: 'absolute'
+            }}
+          >
             <Stack direction="row" justifyContent="space-between" sx={{ zIndex: 10 }}>
-              <Typography sx={{ width: '500px', p: '9px', height: '33px', color: theme.palette.primary.main }} variant="h4">
-                <Typography sx={{
-                  lineHeight: 0.5,
-                  fontSize: '23px',
-                  fontWeight: 1000,
-                  fontFamily: 'fantasy',
-                  display: 'revert',
-                  paddingTop: '10px',
-
-                }}>JAVIS</Typography>
-
+              <Typography
+                sx={{ width: '500px', p: '9px', height: '33px', color: theme.palette.primary.main }}
+                variant="h4"
+              >
+                <Typography
+                  sx={{
+                    lineHeight: 0.5,
+                    fontSize: '23px',
+                    fontWeight: 1000,
+                    fontFamily: 'fantasy',
+                    display: 'revert',
+                    paddingTop: '10px'
+                  }}
+                >
+                  JAVIS
+                </Typography>
               </Typography>
 
-              <IconButton aria-label="fingerprint" onClick={toggleChatbot} sx={{ height: '40px', alignItems: 'flex-start' }}>
+              <IconButton
+                aria-label="fingerprint"
+                onClick={toggleChatbot}
+                sx={{ height: '40px', alignItems: 'flex-start' }}
+              >
                 <RemoveOutlinedIcon />
               </IconButton>
             </Stack>
 
-            <Scrollbar scrollableNodeProps={{ ref: scrollRef }} sx={{ bottom: '24px', height: '500px', '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': { height: 0 } }}>
+            <Scrollbar
+              scrollableNodeProps={{ ref: scrollRef }}
+              sx={{
+                bottom: '24px',
+                height: '500px',
+                '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': { height: 0 }
+              }}
+            >
               <Stack
-                sx={{ width: '450px', height: '450px', top: 12, bottom: 12, right: 0, p: 3, pt: 0.5 }} direction="column" justifyContent="space-between" alignItems="start" display="flow">
-                {dataLoading === false ? chatData.map((message, id) => (
-                  <ChatMessage key={id} chatMessage={message} loading={loading} />
-                )) : <>
-                  <Skeleton sx={{ width: 500, height: 100 }} />
-                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
-                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
-                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+                sx={{
+                  width: '450px',
+                  height: '450px',
+                  top: 12,
+                  bottom: 12,
+                  right: 0,
+                  p: 3,
+                  pt: 0.5
+                }}
+                direction="column"
+                justifyContent="space-between"
+                alignItems="start"
+                display="flow"
+              >
+                {dataLoading === false ? (
+                  chatData.map((message, id) => (
+                    <ChatMessage key={id} chatMessage={message} loading={loading} />
+                  ))
+                ) : (
+                  <>
+                    <Skeleton sx={{ width: 500, height: 100 }} />
+                    <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+                    <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+                    <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
 
-                  <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
+                    <Skeleton animation="wave" sx={{ width: 500, height: 100 }} />
 
-                  <Skeleton animation={false} sx={{ width: 500 }} /></>}
+                    <Skeleton animation={false} sx={{ width: 500 }} />
+                  </>
+                )}
                 <div ref={chatContainerRef}></div>
               </Stack>
             </Scrollbar>
-            {error ? <Alert severity="error"
-              sx={{
-                '& .css-yszjc6-MuiButtonBase-root-MuiIconButton-root ': {
-                  color: 'white',
-                  padding: '3px',
-                  paddingBottom: '-15px',
-                  paddingTop: '16px',
-                  paddingRight: '15px',
-                  marginLeft: '-14px'
-                },
-                '& .css-1savncu-MuiButtonBase-root-MuiIconButton-root': {
-                  marginTop: '23px'
-                }
-              }}
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                
-                onClick={() => {
-                  setOpenOpenAiKeyPopup();
+            {error ? (
+              <Alert
+                severity="error"
+                sx={{
+                  '& .css-yszjc6-MuiButtonBase-root-MuiIconButton-root ': {
+                    color: 'white',
+                    padding: '3px',
+                    paddingBottom: '-15px',
+                    paddingTop: '16px',
+                    paddingRight: '15px',
+                    marginLeft: '-14px'
+                  },
+                  '& .css-1savncu-MuiButtonBase-root-MuiIconButton-root': {
+                    marginTop: '23px'
+                  }
                 }}
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setOpenOpenAiKeyPopup();
+                    }}
+                  >
+                    <VpnKeyTwoToneIcon fontSize="inherit" />
+                  </IconButton>
+                }
               >
-
-                <VpnKeyTwoToneIcon fontSize="inherit" />
-              </IconButton>
-            }>
-            <AlertTitle > Error</AlertTitle >
-            Something wrong with OPEN AI KEY, click the key to provide it.
-          </Alert > : <TextField
-            sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '2px' }, '& .MuiOutlinedInput-input': {
-                color: "#999393"
-              }
-            }}
-            disabled={loading} // Disable TextField when input is null or empty
-            fullWidth
-            placeholder="Message Javis..."
-            variant="outlined"
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
-            InputProps={{
-              endAdornment: (
-                <IconButton color="primary" onClick={handleInputSend}>
-                  <SendRoundedIcon />
-                </IconButton>
-              )
-            }}
-          />
-            }
-
+                <AlertTitle> Error</AlertTitle>
+                Something wrong with OPEN AI KEY, click the key to provide it.
+              </Alert>
+            ) : (
+              <TextField
+                sx={{
+                  '& .MuiOutlinedInput-root': { borderRadius: '2px' },
+                  '& .MuiOutlinedInput-input': {
+                    color: '#999393'
+                  }
+                }}
+                disabled={loading} // Disable TextField when input is null or empty
+                fullWidth
+                placeholder="Message Javis..."
+                variant="outlined"
+                value={input}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton color="primary" onClick={handleInputSend}>
+                      <SendRoundedIcon />
+                    </IconButton>
+                  )
+                }}
+              />
+            )}
+          </Stack>
         </Stack>
-        </Stack >
-
-      )
-}
+      )}
     </>
   );
-
 }
 
 interface ChatMessageProps {
@@ -384,72 +453,73 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMe
   if (!chatMessage) return null; // Handle undefined message
   const theme = useTheme();
 
-  const { chatBotMessage, message } = chatMessage
+  const { chatBotMessage, message } = chatMessage;
   return (
-
-    <> <div ref={ref}>
-      <Stack
-        display="-webkit-inline-box"
-        sx={{
-          pt: '35px',
-          width: '497px',
-          height: 'auto',
-          pl: '105px',
-          alignItems: 'end',
-          display: 'flex',
-          zIndex: 10
-        }}
-      >
-
-        <Typography
+    <>
+      {' '}
+      <div ref={ref}>
+        <Stack
+          display="-webkit-inline-box"
           sx={{
-            backgroundColor: 'primary.main',
-            p: '12px 27px',
-            borderRadius: '4px'
+            pt: '35px',
+            width: '497px',
+            height: 'auto',
+            pl: '105px',
+            alignItems: 'end',
+            display: 'flex',
+            zIndex: 10
           }}
         >
-          {message}
-        </Typography>
-      </Stack>
-      <Stack
-        display="-webkit-inline-box"
-        sx={{
-          zIndex: 10,
-          pt: '35px',
-          width: chatBotMessage ? '480px' : '497px',
-          height: 'auto',
-          pl: chatBotMessage ? '0px' : '105px',
-          pb: '8px',
-          alignItems: chatBotMessage ? 'start' : 'end',
-          display: chatBotMessage ? '-webkit-inline-box' : 'flex',
-        }}
-      >
-        {chatBotMessage && (
-          <Box sx={{
-            mr: '9px',
-            ml: '-10px',
-            height: '43px',
-            p: '10px',
-            borderRadius: '34px',
-            backgroundColor: theme.palette.primary.main,
-            boxShadow: '0px 0px 4px 0px'
-          }}>
-            <SmartToyOutlinedIcon sx={{ color: theme.palette.primary.light }} />
-          </Box>
-        )}
-        <Typography
+          <Typography
+            sx={{
+              backgroundColor: 'primary.main',
+              p: '12px 27px',
+              borderRadius: '4px'
+            }}
+          >
+            {message}
+          </Typography>
+        </Stack>
+        <Stack
+          display="-webkit-inline-box"
           sx={{
-            backgroundColor: chatBotMessage ? 'transparent' : 'primary.main',
-            p: chatBotMessage ? '0px 47px 0px 6px' : '12px 27px',
-            borderRadius: chatBotMessage ? ' ' : '13px',
-            alignContent: 'space-around',
-
+            zIndex: 10,
+            pt: '35px',
+            width: chatBotMessage ? '480px' : '497px',
+            height: 'auto',
+            pl: chatBotMessage ? '0px' : '105px',
+            pb: '8px',
+            alignItems: chatBotMessage ? 'start' : 'end',
+            display: chatBotMessage ? '-webkit-inline-box' : 'flex'
           }}
         >
-          {chatBotMessage}
-        </Typography>
-      </Stack>
-    </div>
+          {chatBotMessage && (
+            <Box
+              sx={{
+                mr: '9px',
+                ml: '-10px',
+                height: '43px',
+                p: '10px',
+                borderRadius: '34px',
+                backgroundColor: theme.palette.primary.main,
+                boxShadow: '0px 0px 4px 0px'
+              }}
+            >
+              <SmartToyOutlinedIcon sx={{ color: theme.palette.primary.light }} />
+            </Box>
+          )}
+          <Typography
+            sx={{
+              backgroundColor: chatBotMessage ? 'transparent' : 'primary.main',
+              p: chatBotMessage ? '0px 47px 0px 6px' : '12px 27px',
+              borderRadius: chatBotMessage ? ' ' : '13px',
+              alignContent: 'space-around'
+            }}
+          >
+            {chatBotMessage}
+          </Typography>
+        </Stack>
+      </div>
     </>
   );
 });

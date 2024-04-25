@@ -37,6 +37,8 @@ const setSession = (accessToken: string | null) => {
     // handleTokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('openAIKey');
+
     delete axios.defaults.headers.common.Authorization;
   }
 };

@@ -90,7 +90,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
             type: Types.Initial,
             payload: {
               isAuthenticated: true,
-              user :null
+              user: null
             }
           });
         } else {
@@ -140,13 +140,11 @@ function AuthProvider({ children }: { children: ReactNode }) {
         'Content-Type': 'application/json'
       }
     };
-    const url = 'http://localhost:8000/graphql'; // Replace with your GraphQL endpoint URL
+    const url = process.env.REACT_APP_BACKEND_HOST ?? ''; // Replace with your GraphQL endpoint URL
 
     const response = await axios.post(url, body, options);
     console.log(response.data);
     const accessToken = response.data.data.login.accessToken;
-    console.log('accessToken:', accessToken);
-
     window.localStorage.setItem('accessToken', accessToken);
     setSession(accessToken);
     dispatch({
@@ -251,12 +249,13 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     setSession(null);
+
     dispatch({ type: Types.Logout });
   };
 
   const resetPassword = (email: string) => console.log(email);
 
-  const updateProfile = () => { };
+  const updateProfile = () => {};
 
   return (
     <AuthContext.Provider
