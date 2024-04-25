@@ -22,4 +22,4 @@
   - Open AI Chatbot using langchain
   - Prepare OPEN_API_KEY
 
-### Contact [Finn](mailto:chien.170901@gmail.com) or [Axcel](datdinhquoc1310@gmail.com) for backend server
+### Contact me [Finn](mailto:chien.170901@gmail.com) or [Axcel](datdinhquoc1310@gmail.com) for backend server
