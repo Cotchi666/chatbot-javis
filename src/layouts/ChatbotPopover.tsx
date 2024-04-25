@@ -9,7 +9,7 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { getAllMessages, createMessage, updateAccessChatbot } from 'contexts/apis';
+import { getAllMessages, createMessage, updateAccessChatbot, getChatCompletion } from 'contexts/apis';
 import ArrowUpwardTwoToneIcon from '@mui/icons-material/ArrowUpwardTwoTone';
 import VpnKeyTwoToneIcon from '@mui/icons-material/VpnKeyTwoTone';
 import Dialog from '@mui/material/Dialog';
@@ -18,6 +18,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
+
 interface ChatMessage {
   id: number;
   chatBotMessage: string;
@@ -25,14 +26,12 @@ interface ChatMessage {
   message: string;
 }
 
-
 export default function Chatbot() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const theme = useTheme();
   const [chatData, setChatData] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [openAIKeyInput, setOpenAIKeyInput] = useState('');
-
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
@@ -40,17 +39,10 @@ export default function Chatbot() {
   const [error, setError] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+  const [isOpen, setIsOpen] = useState(false);
+
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -74,6 +66,7 @@ export default function Chatbot() {
       setChatData([...chatData, userMessage]);
 
       const response = await createMessage(input, "6621dec4146fbe6b65d6cbe6");
+
       const responseData = {
         id: response.data.data.createMessage._id,
         message: response.data.data.createMessage.message,
@@ -102,7 +95,7 @@ export default function Chatbot() {
       }
 
     } catch (error) {
-
+      setError(true)
       console.error('Error fetching response from backend:', error);
     } finally {
 
@@ -116,7 +109,6 @@ export default function Chatbot() {
       handleInputSend();
     }
   };
-  const [isOpen, setIsOpen] = useState(false);
 
   const toggleChatbot = () => {
     setIsOpen(!isOpen);
@@ -127,33 +119,47 @@ export default function Chatbot() {
   };
   const setSendOpenAiKey = async () => {
     if (!openAIKeyInput.trim()) return;
-
-    // Send the input value to your backend or handle it as needed
-    console.log("Input value:", openAIKeyInput);
-    const res = await updateAccessChatbot(openAIKeyInput)
-  
-    console.log(res.data.errors[0].message)
-    if (res.data.errors[0].message === 'Unauthorized') {
-      setOpenAIKeyInput('')
-      setOpenOpenAiKeyPopup()
-      setError(true)
-    } else {
+    const check = await getChatCompletion(openAIKeyInput)
+    if (check !== false) {
+      window.localStorage.setItem('openAIKey', openAIKeyInput);
+      await getAllMessagesFromBackend()
       setOpenAIKeyInput('')
       setOpenOpenAiKeyPopup()
       setError(false)
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    } else {
+      setOpenAIKeyInput('')
+      setOpenOpenAiKeyPopup()
+      setError(true)
     }
+
+
 
   };
   // setSendOpenAiKey
   const getAllMessagesFromBackend = async () => {
+    const result = await checkOpenAIKeyInStorage()
+    if (result === false) {
+      console.log(147)
+      setChatData([]);
+      setError(true)
+      setDataLoading(false)
+      return;
+    }
     setDataLoading(true)
     const res = await getAllMessages("6621dec4146fbe6b65d6cbe6");
+    console.log("144", res)
+
     if (res.data.errors) {
-      if (res.data.errors[0].message === 'Unauthorized') {
+      console.log(146, res.data.errors[0])
+      if (res.data.errors[0].message) {
+        console.log(146)
         setError(true)
-      } else {
-        setError(false)
       }
+    } else {
+      setError(false)
     }
 
     // Check if res.data.data is null or undefined
@@ -177,14 +183,27 @@ export default function Chatbot() {
     setChatData(messages);
     setDataLoading(false)
   };
-  useEffect(() => { getAllMessagesFromBackend() }, [])
+  const checkOpenAIKeyInStorage = async () => {
+    const apiKey = window.localStorage.getItem('openAIKey') ?? '';
+    const check = await getChatCompletion(apiKey)
+    if (check !== false) {
+      return true
+    } else {
+      return false
+    }
+  };
   useEffect(() => {
+    getAllMessagesFromBackend()
 
+  }, [])
+  useEffect(() => {
+    // when fetch all message
     const scrollMessagesToBottom = () => {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     };
+    // when fetch a message
     const scrollMessagesToBottomMessage = () => {
       if (chatContainerRef.current) {
         chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -214,10 +233,6 @@ export default function Chatbot() {
           {"OpenAIKey in below: "}
         </DialogTitle>
         <DialogContent>
-          {/* <DialogContentText>
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
-          </DialogContentText> */}
           <TextField
             value={openAIKeyInput}
             onChange={handleOpenAIKeyInputChange}
@@ -304,8 +319,10 @@ export default function Chatbot() {
                   paddingTop: '16px',
                   paddingRight: '15px',
                   marginLeft: '-14px'
+                },
+                '& .css-1savncu-MuiButtonBase-root-MuiIconButton-root': {
+                  paddingTop: '28px'
                 }
-
               }}
               action={
                 <IconButton
@@ -353,6 +370,7 @@ export default function Chatbot() {
   );
 
 }
+
 interface ChatMessageProps {
   chatMessage: {
     id: number;
@@ -365,8 +383,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMe
   if (!chatMessage) return null; // Handle undefined message
   const theme = useTheme();
 
-  const { id, chatBotMessage, message } = chatMessage
-  const avatarUrl = " "
+  const {chatBotMessage, message } = chatMessage
   return (
 
     <> <div ref={ref}>

@@ -1,6 +1,9 @@
 import axios from "axios";
 // const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRlbW8xMjNAZ21haWwuY29tIiwic3ViIjoiNjYxYTY3NWMyYTM2YTYyZmY5M2JmOWMzIiwiaWF0IjoxNzEzOTQwMTE0LCJleHAiOjE3MTQwMjY1MTR9.m6_wEanKOQId7KwianMWjZKTmmFLS-onkCbJxsoEshc"
 const accessToken = window.localStorage.getItem('accessToken');
+const openAIKey = window.localStorage.getItem('openAIKey');
+console.log("accesstoken",openAIKey)
+
 console.log("accesstoken",accessToken)
 export const createMessage = async (messageText: string, conversationId: string) => {
     const body = {
@@ -32,6 +35,9 @@ export const createMessage = async (messageText: string, conversationId: string)
         headers: {
           'Authorization': 'Bearer ' + accessToken
         },
+        params:{
+          openAIKey: openAIKey
+        }
       }
     const url = 'http://localhost:8000/graphql'; // Replace with your GraphQL endpoint URL
 
@@ -55,7 +61,9 @@ export const updateAccessChatbot = async (openAIKey: string) => {
   let config = {
       headers: {
         'Authorization': 'Bearer ' + accessToken
-      },
+      }, params:{
+        openAIKey: openAIKey
+      }
     }
   const url = 'http://localhost:8000/graphql'; // Replace with your GraphQL endpoint URL
 
@@ -88,3 +96,37 @@ export const getAllMessages = async (conversationID: string) => {
     return response
   
 };
+
+
+
+export const getChatCompletion = async (openAIKey: string) =>{
+  const payload = {
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant."
+      },
+      {
+        role: "user",
+        content: "Hello!"
+      }
+    ]
+  };
+
+  try {
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openAIKey}`
+      }
+    });
+
+    console.log("Response:", response);
+    return response;
+  } catch (error) {
+    console.error("Error");
+    return false;
+
+  }
+}
