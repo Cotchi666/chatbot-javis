@@ -1,10 +1,7 @@
 import axios from "axios";
-// const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRlbW8xMjNAZ21haWwuY29tIiwic3ViIjoiNjYxYTY3NWMyYTM2YTYyZmY5M2JmOWMzIiwiaWF0IjoxNzEzOTQwMTE0LCJleHAiOjE3MTQwMjY1MTR9.m6_wEanKOQId7KwianMWjZKTmmFLS-onkCbJxsoEshc"
 const accessToken = window.localStorage.getItem('accessToken');
 const openAIKey = window.localStorage.getItem('openAIKey');
-console.log("accesstoken",openAIKey)
 
-console.log("accesstoken",accessToken)
 export const createMessage = async (messageText: string, conversationId: string) => {
     const body = {
       query: `

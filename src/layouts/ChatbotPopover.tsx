@@ -119,18 +119,17 @@ export default function Chatbot() {
   };
   const setSendOpenAiKey = async () => {
     if (!openAIKeyInput.trim()) return;
+    setOpenAIKeyInput('')
     const check = await getChatCompletion(openAIKeyInput)
     if (check !== false) {
       window.localStorage.setItem('openAIKey', openAIKeyInput);
       await getAllMessagesFromBackend()
-      setOpenAIKeyInput('')
       setOpenOpenAiKeyPopup()
       setError(false)
       if (scrollRef.current) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     } else {
-      setOpenAIKeyInput('')
       setOpenOpenAiKeyPopup()
       setError(true)
     }
@@ -249,7 +248,7 @@ export default function Chatbot() {
               //   width: '502px'
               //  }  
               //  ,
-              padding: '0px 24px'
+
             }} />
 
         </DialogContent>
@@ -321,51 +320,53 @@ export default function Chatbot() {
                   marginLeft: '-14px'
                 },
                 '& .css-1savncu-MuiButtonBase-root-MuiIconButton-root': {
-                  paddingTop: '28px'
+                  marginTop: '23px'
                 }
               }}
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setOpenOpenAiKeyPopup();
-                  }}
-                >
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                
+                onClick={() => {
+                  setOpenOpenAiKeyPopup();
+                }}
+              >
 
-                  <VpnKeyTwoToneIcon fontSize="inherit" />
+                <VpnKeyTwoToneIcon fontSize="inherit" />
+              </IconButton>
+            }>
+            <AlertTitle > Error</AlertTitle >
+            Something wrong with OPEN AI KEY, click the key to provide it.
+          </Alert > : <TextField
+            sx={{
+              '& .MuiOutlinedInput-root': { borderRadius: '2px' }, '& .MuiOutlinedInput-input': {
+                color: "#999393"
+              }
+            }}
+            disabled={loading} // Disable TextField when input is null or empty
+            fullWidth
+            placeholder="Message Javis..."
+            variant="outlined"
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
+            InputProps={{
+              endAdornment: (
+                <IconButton color="primary" onClick={handleInputSend}>
+                  <SendRoundedIcon />
                 </IconButton>
-              }>
-              <AlertTitle > Error</AlertTitle >
-              Something wrong with OPEN AI KEY, click the key to provide it.
-            </Alert > : <TextField
-              sx={{
-                '& .MuiOutlinedInput-root': { borderRadius: '2px' }, '& .MuiOutlinedInput-input': {
-                  color: "#999393"
-                }
-              }}
-              disabled={loading} // Disable TextField when input is null or empty
-              fullWidth
-              placeholder="Message Javis..."
-              variant="outlined"
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              InputProps={{
-                endAdornment: (
-                  <IconButton color="primary" onClick={handleInputSend}>
-                    <SendRoundedIcon />
-                  </IconButton>
-                )
-              }}
-            />
+              )
+            }}
+          />
             }
 
-          </Stack>
         </Stack>
+        </Stack >
 
-      )}
+      )
+}
     </>
   );
 
@@ -383,7 +384,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(({ chatMe
   if (!chatMessage) return null; // Handle undefined message
   const theme = useTheme();
 
-  const {chatBotMessage, message } = chatMessage
+  const { chatBotMessage, message } = chatMessage
   return (
 
     <> <div ref={ref}>
