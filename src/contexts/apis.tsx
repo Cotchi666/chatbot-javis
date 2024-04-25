@@ -1,6 +1,7 @@
 import axios from "axios";
-const accessToken = window.localStorage.getItem('accessToken');
-const openAIKey = window.localStorage.getItem('openAIKey');
+const accessToken = window.localStorage.getItem('accessToken') ??'';
+const openAIKey = window.localStorage.getItem('openAIKey')?? '';
+const backendHost = process.env.REACT_APP_BACKEND_HOST ?? 'http://localhost:8000/graphql'; 
 
 export const createMessage = async (messageText: string, conversationId: string) => {
     const body = {
@@ -36,9 +37,8 @@ export const createMessage = async (messageText: string, conversationId: string)
           openAIKey: openAIKey
         }
       }
-    const url = 'http://localhost:8000/graphql'; // Replace with your GraphQL endpoint URL
 
-    const response = await axios.post(url, body, config);
+    const response = await axios.post(backendHost, body, config);
     return response
 };
 export const updateAccessChatbot = async (openAIKey: string) => {
@@ -67,8 +67,6 @@ export const updateAccessChatbot = async (openAIKey: string) => {
   const response = await axios.post(url, body, config);
   return response
 };
-  
-
 export const getAllMessages = async (conversationID: string) => {
     const body = {
       query: `query ($conversationID: String!) {
@@ -85,17 +83,11 @@ export const getAllMessages = async (conversationID: string) => {
           'Authorization': 'Bearer ' + accessToken
         }
       }
-    const domainBackend = process.env.REACT_APP_BACKEND_HOST
-      ? process.env.REACT_APP_BACKEND_HOST
-      : ' ';
-    const response = await axios.post(domainBackend, body,config);
+    const response = await axios.post(backendHost, body,config);
 
     return response
   
 };
-
-
-
 export const getChatCompletion = async (openAIKey: string) =>{
   const payload = {
     model: "gpt-3.5-turbo",

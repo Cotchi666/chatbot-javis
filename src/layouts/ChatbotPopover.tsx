@@ -117,7 +117,7 @@ export default function Chatbot() {
     console.log(openDialog)
     setOpenDialog(!openDialog)
   };
-  const setSendOpenAiKey = async () => {
+  const setUpOpenAIKey = async () => {
     if (!openAIKeyInput.trim()) return;
     setOpenAIKeyInput('')
     const check = await getChatCompletion(openAIKeyInput)
@@ -137,7 +137,7 @@ export default function Chatbot() {
 
 
   };
-  // setSendOpenAiKey
+  // setUpOpenAIKey
   const getAllMessagesFromBackend = async () => {
     const result = await checkOpenAIKeyInStorage()
     if (result === false) {
@@ -256,7 +256,7 @@ export default function Chatbot() {
           <Button autoFocus onClick={setOpenOpenAiKeyPopup}>
             Cancel
           </Button>
-          <Button onClick={setSendOpenAiKey} autoFocus>
+          <Button onClick={setUpOpenAIKey} autoFocus>
             Send
           </Button>
         </DialogActions>
