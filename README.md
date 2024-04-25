@@ -5,8 +5,7 @@
 ### Warning
   - Checkout .env
 ### [Open ID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
-
-    git checkout oidc-google
+  - check out docs [here](src/components/authentication/login/LoginForm.tsx#L96)
 ### Chatbot
   - Open AI Chatbot using langchain
   - Prepare OPEN_API_KEY
