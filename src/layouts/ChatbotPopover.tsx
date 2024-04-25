@@ -42,16 +42,20 @@ export default function Chatbot() {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   const [isOpen, setIsOpen] = useState(false);
-  const conversationId = '6621f4f046eebc3e67f45406';
+  const conversationId = '6621dec4146fbe6b65d6cbe6';
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
   const handleOpenAIKeyInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOpenAIKeyInput(event.target.value);
   };
-
   const handleInputSend = async () => {
     if (!input.trim()) return;
+    if (!window.localStorage.getItem('accessToken')) {
+      setError(true);
+      return;
+    }
     setLoading(true);
     try {
       const userMessage: ChatMessage = {
@@ -99,21 +103,18 @@ export default function Chatbot() {
       setInput(''); // Clear input field
     }
   };
-
   const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       handleInputSend();
     }
   };
-
   const toggleChatbot = () => {
     setIsOpen(!isOpen);
   };
   const setOpenOpenAiKeyPopup = () => {
-    console.log(openDialog);
     setOpenDialog(!openDialog);
   };
-  const setUpOpenAIKey = async () => {
+  const checkOpenAIKey = async () => {
     if (!openAIKeyInput.trim()) return;
     setOpenAIKeyInput('');
     const check = await getChatCompletion(openAIKeyInput);
@@ -130,11 +131,13 @@ export default function Chatbot() {
       setError(true);
     }
   };
-  // setUpOpenAIKey
   const getAllMessagesFromBackend = async () => {
+    if (!window.localStorage.getItem('accessToken')) {
+      setError(true);
+      return;
+    }
     const result = await checkOpenAIKeyInStorage();
     if (result === false) {
-      console.log(147);
       setChatData([]);
       setError(true);
       setDataLoading(false);
@@ -142,12 +145,9 @@ export default function Chatbot() {
     }
     setDataLoading(true);
     const res = await getAllMessages(conversationId);
-    console.log('144', res);
 
     if (res.data.errors) {
-      console.log(146, res.data.errors[0]);
       if (res.data.errors[0].message) {
-        console.log(146);
         setError(true);
       }
     } else {
@@ -184,6 +184,7 @@ export default function Chatbot() {
       return false;
     }
   };
+
   useEffect(() => {
     getAllMessagesFromBackend();
   }, []);
@@ -249,7 +250,7 @@ export default function Chatbot() {
             <Button autoFocus onClick={setOpenOpenAiKeyPopup}>
               Cancel
             </Button>
-            <Button onClick={setUpOpenAIKey} autoFocus>
+            <Button onClick={checkOpenAIKey} autoFocus>
               Send
             </Button>
           </DialogActions>

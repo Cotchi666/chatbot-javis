@@ -4,6 +4,7 @@ const openAIKey = window.localStorage.getItem('openAIKey') ?? '';
 const backendHost = process.env.REACT_APP_BACKEND_HOST ?? 'http://localhost:8000/graphql';
 
 export const createMessage = async (messageText: string, conversationId: string) => {
+
   const body = {
     query: `
       mutation 
