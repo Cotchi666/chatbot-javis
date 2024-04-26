@@ -43,6 +43,7 @@ export default function Chatbot() {
   const id = open ? 'simple-popover' : undefined;
   const [isOpen, setIsOpen] = useState(false);
   const conversationId = '6621dec4146fbe6b65d6cbe6';
+  const [disableChatbot, setDisableChatbot] = useState(true);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -109,7 +110,12 @@ export default function Chatbot() {
     }
   };
   const toggleChatbot = () => {
+    console.log(113)
 
+    if (loading === false){
+      console.log(114)
+      return ;
+    }
     setIsOpen(!isOpen);
   };
   const setOpenOpenAiKeyPopup = () => {
@@ -133,6 +139,7 @@ export default function Chatbot() {
     }
   };
   const getAllMessagesFromBackend = async () => {
+
     if (!window.localStorage.getItem('accessToken')) {
       setError(true);
       return;
@@ -142,6 +149,7 @@ export default function Chatbot() {
       setChatData([]);
       setError(true);
       setDataLoading(false);
+
       return;
     }
     setDataLoading(true);
@@ -188,6 +196,12 @@ export default function Chatbot() {
 
   useEffect(() => {
     getAllMessagesFromBackend();
+    setDisableChatbot(false)
+
+    if (scrollRef.current) {
+      console.log(193)
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
   }, []);
   useEffect(() => {
     // when fetch all message
@@ -257,7 +271,8 @@ export default function Chatbot() {
           </DialogActions>
         </Dialog>
       )}
-  {dataLoading === false && <Box
+      <Box
+
         sx={{
           top: 12,
           bottom: 12,
@@ -282,10 +297,12 @@ export default function Chatbot() {
           <Fab color="primary" aria-describedby={id} onClick={toggleChatbot}>
             <SmartToyOutlinedIcon />
           </Fab>
+
         </Box>
-      </Box>}
-     
+      </Box>
+   
       {isOpen && (
+
         <Stack
           sx={{
             top: 12,
@@ -364,7 +381,9 @@ export default function Chatbot() {
                 {dataLoading === false ? (
                   chatData.map((message, id) => (
                     <ChatMessage key={id} chatMessage={message} loading={loading} />
+
                   ))
+
                 ) : (
                   <>
                     <Skeleton sx={{ width: 500, height: 100 }} />
@@ -378,6 +397,7 @@ export default function Chatbot() {
                   </>
                 )}
                 <div ref={chatContainerRef}></div>
+
               </Stack>
             </Scrollbar>
             {error ? (
