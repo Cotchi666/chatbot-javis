@@ -2,6 +2,8 @@
  - OpenAI + Langchain + React + Nestjs + Oauth2 [Google - Facebook - Github]
  - Contact me [Finn](mailto:chien.170901@gmail.com) or [Axcel](datdinhquoc1310@gmail.com) for Nestjs backend server.
 
+[![Demo Chatbot javis](./public/demo.gif)](https://javis-f3q7.onrender.com/)
+
 ### Install (node 16.13.0) (yarn 1.22.19)
     yarn install
     yarn start
