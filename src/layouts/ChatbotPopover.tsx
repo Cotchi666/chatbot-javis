@@ -131,6 +131,8 @@ export default function Chatbot() {
       setOpenOpenAiKeyPopup();
       setError(true);
     }
+    window.location.reload();
+
   };
   const getAllMessagesFromBackend = async () => {
     if (!window.localStorage.getItem('accessToken')) {
@@ -257,7 +259,7 @@ export default function Chatbot() {
           </DialogActions>
         </Dialog>
       )}
-  {dataLoading === false && <Box
+      {dataLoading === false && <Box
         sx={{
           top: 12,
           bottom: 12,
@@ -284,7 +286,7 @@ export default function Chatbot() {
           </Fab>
         </Box>
       </Box>}
-     
+
       {isOpen && (
         <Stack
           sx={{
@@ -410,7 +412,7 @@ export default function Chatbot() {
                 }
               >
                 <AlertTitle> Error</AlertTitle>
-                Something wrong with OPEN AI KEY, click the key to provide it.
+                Sign in as Demo user. Click the key icon to provide your OpenAI API key.
               </Alert>
             ) : (
               <TextField
