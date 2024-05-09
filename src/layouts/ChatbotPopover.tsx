@@ -131,6 +131,8 @@ export default function Chatbot() {
       setOpenOpenAiKeyPopup();
       setError(true);
     }
+    window.location.reload();
+
   };
   const getAllMessagesFromBackend = async () => {
 
@@ -413,7 +415,7 @@ export default function Chatbot() {
                 }
               >
                 <AlertTitle> Error</AlertTitle>
-                Something wrong with OPEN AI KEY, click the key to provide it.
+                Sign in as Demo user. Click the key icon to provide your OpenAI API key.
               </Alert>
             ) : (
               <TextField
