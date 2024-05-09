@@ -133,6 +133,7 @@ export default function Chatbot() {
     }
   };
   const getAllMessagesFromBackend = async () => {
+
     if (!window.localStorage.getItem('accessToken')) {
       setError(true);
       return;
@@ -177,7 +178,9 @@ export default function Chatbot() {
     setDataLoading(false);
   };
   const checkOpenAIKeyInStorage = async () => {
-    const apiKey = window.localStorage.getItem('openAIKey') ?? '';
+    let apiEnvKey = process.env.OPEN_AI_KEY ?? ''
+    let apiKey = window.localStorage.getItem('openAIKey') ?? apiEnvKey;
+    
     const check = await getChatCompletion(apiKey);
     if (check !== false) {
       return true;
@@ -257,7 +260,7 @@ export default function Chatbot() {
           </DialogActions>
         </Dialog>
       )}
-  {dataLoading === false && <Box
+      {dataLoading === false && <Box
         sx={{
           top: 12,
           bottom: 12,
@@ -284,7 +287,7 @@ export default function Chatbot() {
           </Fab>
         </Box>
       </Box>}
-     
+
       {isOpen && (
         <Stack
           sx={{
