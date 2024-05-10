@@ -1,5 +1,6 @@
-# 🦜🔗 This is a chatbot implemented :
+# 🦜🔗 This is a chatbot implemented
  - OpenAI + Langchain + React + Nestjs + Oauth2 [Google - Facebook - Github]
+ - For some security reasons, this resource has to keep the Back-end development repo private.
  - Contact me [Finn](mailto:chien.170901@gmail.com) or [Axcel](datdinhquoc1310@gmail.com) for Nestjs backend server.
 
 [![Demo Chatbot javis](./public/demo.gif)](https://javis-f3q7.onrender.com/)
