@@ -142,7 +142,7 @@ export default function LoginForm() {
   };
   const handleLoginFacebook = async (response: any) => {
     try {
-      await loginFacebook(response.accessToken);
+      await loginFacebook(response);
 
       enqueueSnackbar('Login success', {
         variant: 'success',
