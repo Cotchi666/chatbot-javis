@@ -236,7 +236,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       : ' ';
     const response = await axios.post(domainBackend, body, options);
 
-    const accessToken = response.data.data.login.accessToken;
+    const accessToken = response.data.data.githubLogin.accessToken;
     console.log('accessToken:', accessToken);
 
     window.localStorage.setItem('accessToken', accessToken);
