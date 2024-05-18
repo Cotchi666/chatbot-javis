@@ -143,7 +143,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const url = process.env.REACT_APP_BACKEND_HOST ?? ''; // Replace with your GraphQL endpoint URL
 
     const response = await axios.post(url, body, options);
-    console.log(response.data);
     const accessToken = response.data.data.login.accessToken;
     window.localStorage.setItem('accessToken', accessToken);
     setSession(accessToken);
@@ -155,13 +154,32 @@ function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
   const loginGoogle = async (idToken: string) => {
-    // const response = await axios.post('/api/account/login', {
-    //   email,
-    //   password
-    // });
-    // const { accessToken, user } = response.data;
+    console.log("🚀 ~ loginGoogle ~ idToken:", idToken)
+    const body = {
+      query: `  query ($idToken: String!) {
+          googleLogin(googleIDToken: $idToken) {
+            accessToken,
+            refreshToken
+          }
+        }
+  `,
+      variables: {
+        idToken: idToken
+      }
+    };
 
-    // setSession(accessToken);
+    const options = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    const url = process.env.REACT_APP_BACKEND_HOST ?? ''; // Replace with your GraphQL endpoint URL
+
+    const response = await axios.post(url, body, options);
+    const accessToken = response.data.data.googleLogin.accessToken;
+    window.localStorage.setItem('accessToken', accessToken);
+
+    setSession(accessToken);
     dispatch({
       type: Types.Login,
       payload: {
@@ -169,14 +187,33 @@ function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
   };
-  const loginFacebook = async (data: string) => {
-    // const response = await axios.post('/api/account/login', {
-    //   email,
-    //   password
-    // });
-    // const { accessToken, user } = response.data;
 
-    // setSession(accessToken);
+  const loginFacebook = async (data: string) => {
+    console.log("🚀 ~ facebook ~ idToken:", data['email'])
+    const body = {
+      query: `  query ($emailFacebook: String!) {
+          facebookLogin(emailFacebook: $emailFacebook) {
+            accessToken,
+            refreshToken
+          }
+        }
+  `,
+      variables: {
+        emailFacebook: data['email']
+      }
+    };
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    const url = process.env.REACT_APP_BACKEND_HOST ?? ''; // Replace with your GraphQL endpoint URL
+
+    const response = await axios.post(url, body, options);
+    const accessToken = response.data.data.facebookLogin.accessToken;
+    window.localStorage.setItem('accessToken', accessToken);
+
     dispatch({
       type: Types.Login,
       payload: {
@@ -217,8 +254,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       : ' ';
     const response = await axios.post(domainBackend, body, options);
 
-    console.log('🚀 ~ accessToken:', response);
-    const accessToken = response.data.data.login.accessToken;
+    const accessToken = response.data.data.githubLogin.accessToken;
     console.log('accessToken:', accessToken);
 
     window.localStorage.setItem('accessToken', accessToken);
@@ -255,7 +291,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = (email: string) => console.log(email);
 
-  const updateProfile = () => {};
+  const updateProfile = () => { };
 
   return (
     <AuthContext.Provider

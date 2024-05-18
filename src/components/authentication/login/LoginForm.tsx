@@ -104,17 +104,18 @@ export default function LoginForm() {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         };
-
+        console.log(codeResponse.code)
         const data = qs.stringify({
           code: codeResponse.code,
           client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
           client_secret: process.env.REACT_APP_GOOGLE_SECRET_KEY,
-          redirect_uri: process.env.REACT_APP_REDIRECT_URL,
+          // redirect_uri: process.env.REACT_APP_REDIRECT_URL,
+
+          redirect_uri: 'http://localhost:3000',
           grant_type: 'authorization_code'
         });
 
         const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', data, config);
-        console.log('🚀 ~ onSuccess: ~ tokenResponse:', tokenResponse.data.id_token);
         await loginGoogle(tokenResponse.data.id_token);
 
         enqueueSnackbar('Login success', {
@@ -141,7 +142,7 @@ export default function LoginForm() {
   };
   const handleLoginFacebook = async (response: any) => {
     try {
-      await loginFacebook(response.accessToken);
+      await loginFacebook(response);
 
       enqueueSnackbar('Login success', {
         variant: 'success',
