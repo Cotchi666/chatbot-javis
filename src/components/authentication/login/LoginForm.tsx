@@ -109,9 +109,9 @@ export default function LoginForm() {
           code: codeResponse.code,
           client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
           client_secret: process.env.REACT_APP_GOOGLE_SECRET_KEY,
-          // redirect_uri: process.env.REACT_APP_REDIRECT_URL,
+          redirect_uri: process.env.REACT_APP_REDIRECT_URL,
 
-          redirect_uri: 'http://localhost:3000',
+          // redirect_uri: 'http://localhost:3000',
           grant_type: 'authorization_code'
         });
 
