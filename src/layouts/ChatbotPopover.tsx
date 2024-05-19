@@ -182,15 +182,15 @@ export default function Chatbot() {
   const checkOpenAIKeyInStorage = async () => {
     let apiEnvKey = process.env.OPEN_AI_KEY ?? ''
     let apiKey = window.localStorage.getItem('openAIKey') ?? apiEnvKey;
+    return true
 
+    // const check = await getChatCompletion(apiKey);
 
-    const check = await getChatCompletion(apiKey);
-
-    if (check !== false) {
-      return true;
-    } else {
-      return false;
-    }
+    // if (check !== false) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   };
 
   useEffect(() => {
