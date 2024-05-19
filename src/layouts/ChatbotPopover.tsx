@@ -182,13 +182,17 @@ export default function Chatbot() {
   const checkOpenAIKeyInStorage = async () => {
     let apiEnvKey = process.env.OPEN_AI_KEY ?? ''
     let apiKey = window.localStorage.getItem('openAIKey') ?? apiEnvKey;
-    
-    const check = await getChatCompletion(apiKey);
-    if (check !== false) {
-      return true;
-    } else {
-      return false;
-    }
+    // using Gemini instead
+    // ******************
+    return true;
+
+    // const check = await getChatCompletion(apiKey);
+
+    // if (check !== false) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   };
 
   useEffect(() => {
@@ -414,8 +418,11 @@ export default function Chatbot() {
                   </IconButton>
                 }
               >
-                <AlertTitle> Error</AlertTitle>
+                {/* <AlertTitle> Error</AlertTitle>
                 Sign in as Demo user. Click the key icon to provide your OpenAI API key.
+              </Alert> */}
+               <AlertTitle> Error</AlertTitle>
+                Please login as Demo user.
               </Alert>
             ) : (
               <TextField
