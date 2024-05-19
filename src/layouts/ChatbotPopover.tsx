@@ -416,12 +416,12 @@ export default function Chatbot() {
                   </IconButton>
                 }
               >
-                <AlertTitle> Error</AlertTitle>
+                {/* <AlertTitle> Error</AlertTitle>
                 Sign in as Demo user. Click the key icon to provide your OpenAI API key.
+              </Alert> */}
+               <AlertTitle> Error</AlertTitle>
+                Please login as Demo user.
               </Alert>
-              //  <AlertTitle> Error</AlertTitle>
-              //   Please login as Demo user.
-              // </Alert>
             ) : (
               <TextField
                 sx={{
