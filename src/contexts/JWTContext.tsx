@@ -77,9 +77,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
+        const conversationId = window.localStorage.getItem('conversationId');
 
         if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
+          setSession(accessToken, conversationId);
 
           // const response = await axios.get('/api/account/my-account');
           // const { user } = response.data;
@@ -124,6 +125,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       login(loginAuthInput: $loginAuthInput) {
         accessToken
         refreshToken
+        conversationId
       }
     }
   `,
@@ -143,9 +145,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const url = process.env.REACT_APP_BACKEND_HOST ?? ''; // Replace with your GraphQL endpoint URL
 
     const response = await axios.post(url, body, options);
-    const accessToken = response.data.data.login.accessToken;
-    window.localStorage.setItem('accessToken', accessToken);
-    setSession(accessToken);
+    const { accessToken, conversationId } = response.data.data.login;
+    console.log(response)
+    setSession(accessToken, conversationId);
     dispatch({
       type: Types.Login,
       payload: {
@@ -159,7 +161,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
       query: `  query ($idToken: String!) {
           googleLogin(googleIDToken: $idToken) {
             accessToken,
-            refreshToken
+            refreshToken, 
+            conversationId
           }
         }
   `,
@@ -176,10 +179,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const url = process.env.REACT_APP_BACKEND_HOST ?? ''; // Replace with your GraphQL endpoint URL
 
     const response = await axios.post(url, body, options);
-    const accessToken = response.data.data.googleLogin.accessToken;
-    window.localStorage.setItem('accessToken', accessToken);
+    console.log("🚀 ~ loginGoogle ~ response:", response)
 
-    setSession(accessToken);
+    const { accessToken, conversationId } = response.data.data.googleLogin;
+    setSession(accessToken, conversationId);
     dispatch({
       type: Types.Login,
       payload: {
@@ -284,7 +287,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    setSession(null);
+    setSession(null,null);
 
     dispatch({ type: Types.Logout });
   };

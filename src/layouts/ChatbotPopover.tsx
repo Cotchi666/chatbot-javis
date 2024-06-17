@@ -42,7 +42,8 @@ export default function Chatbot() {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   const [isOpen, setIsOpen] = useState(false);
-  const conversationId = '6621dec4146fbe6b65d6cbe6';
+  const [conversationId, setConversationId] = useState(window.localStorage.getItem('conversationId') ?? "")
+  // const conversationId = window.localStorage.getItem('conversationId') ?? "";
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -108,8 +109,11 @@ export default function Chatbot() {
       handleInputSend();
     }
   };
-  const toggleChatbot = () => {
+  const toggleChatbot = async () => {
+    // console.log(conversationId)
+    // console.log(window.localStorage.getItem('conversationId'))
 
+    // setConversationId(window.localStorage.getItem('conversationId') ?? "")
     setIsOpen(!isOpen);
   };
   const setOpenOpenAiKeyPopup = () => {
@@ -193,9 +197,11 @@ export default function Chatbot() {
     // }
   };
 
+
   useEffect(() => {
+   
     getAllMessagesFromBackend();
-  }, []);
+  }, [conversationId]);
   useEffect(() => {
     // when fetch all message
     const scrollMessagesToBottom = () => {
@@ -387,7 +393,7 @@ export default function Chatbot() {
                 <div ref={chatContainerRef}></div>
               </Stack>
             </Scrollbar>
-            {error ? (
+            {/* {error ? (
               <Alert
                 severity="error"
                 sx={{
@@ -416,10 +422,8 @@ export default function Chatbot() {
                   </IconButton>
                 }
               >
-                {/* <AlertTitle> Error</AlertTitle>
-                Sign in as Demo user. Click the key icon to provide your OpenAI API key.
-              </Alert> */}
-               <AlertTitle> Error</AlertTitle>
+               
+                <AlertTitle> Error</AlertTitle>
                 Please login as Demo user.
               </Alert>
             ) : (
@@ -445,7 +449,29 @@ export default function Chatbot() {
                   )
                 }}
               />
-            )}
+            )} */}
+            <TextField
+              sx={{
+                '& .MuiOutlinedInput-root': { borderRadius: '2px' },
+                '& .MuiOutlinedInput-input': {
+                  color: '#999393'
+                }
+              }}
+              disabled={loading} // Disable TextField when input is null or empty
+              fullWidth
+              placeholder="Message Javis..."
+              variant="outlined"
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              InputProps={{
+                endAdornment: (
+                  <IconButton color="primary" onClick={handleInputSend}>
+                    <SendRoundedIcon />
+                  </IconButton>
+                )
+              }}
+            />
           </Stack>
         </Stack>
       )}
